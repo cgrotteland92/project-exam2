@@ -20,3 +20,15 @@ export interface ProfileResponse extends AuthUser {
     bookings: number;
   };
 }
+
+export interface Venue {
+  id: string;
+  name: string;
+  description?: string;
+  media?: { url: string; alt?: string }[];
+  price: number;
+  maxGuests: number;
+  location?: { address?: string; city?: string; country?: string };
+  owner?: { name: string; email: string };
+  avatar?: { url: string; alt?: string };
+}
