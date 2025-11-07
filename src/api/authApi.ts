@@ -53,17 +53,18 @@ export async function loginUser(
       body: JSON.stringify({ email, password }),
     });
 
-    if (!res.ok) throw new Error("Invalid email or password");
+    if (!res.ok) {
+      throw new Error("Invalid email or password");
+    }
 
-    const data: LoginResponse = await res.json();
+    const json = await res.json();
+    const data: LoginResponse = json.data;
+
     toast.success(`Welcome back, ${data.name}!`);
     return data;
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      toast.error(error.message);
-    } else {
-      toast.error("Login failed");
-    }
+    const message = error instanceof Error ? error.message : "Login failed";
+    toast.error(message);
     throw error;
   }
 }
