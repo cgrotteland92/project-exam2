@@ -32,7 +32,6 @@ export default function Register() {
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    setLoading(true);
 
     if (!isNotEmpty(name)) {
       toast.error("Name cannot be empty.");
@@ -87,6 +86,7 @@ export default function Register() {
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              autoComplete="name"
               className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Your name"
               required
@@ -105,6 +105,7 @@ export default function Register() {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
               className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="name@stud.noroff.no"
               required

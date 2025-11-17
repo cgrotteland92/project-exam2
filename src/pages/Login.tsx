@@ -31,7 +31,6 @@ export default function Login() {
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    setLoading(true);
 
     if (!isValidNoroffEmail(email)) {
       toast.error("Please use a valid @stud.noroff.no email.");
@@ -85,6 +84,7 @@ export default function Login() {
               onChange={(e) => setEmail(e.target.value)}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="name@stud.noroff.no"
+              autoComplete="email"
               required
             />
           </div>
@@ -95,6 +95,7 @@ export default function Login() {
               label="Password"
               value={password}
               onChange={setPassword}
+              autoComplete="current-password"
               required
             />
           </div>

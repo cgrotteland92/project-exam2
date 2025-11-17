@@ -1,10 +1,16 @@
 import { useEffect, useState } from "react";
+
+import { AnimatePresence, motion } from "framer-motion";
 import type { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { useAuth } from "../context/useAuth";
 import { getProfile, updateAvatar } from "../api/authApi";
+import { cancelBooking } from "../api/bookingsApi";
 import type { ProfileResponse } from "../types/api";
+import OverviewTab from "../components/OverviewTab";
+import BookingsTab from "../components/BookingsTab";
+import VenuesTab from "../components/VenuesTab";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -16,6 +22,10 @@ export default function Profile() {
   const [avatarUrl, setAvatarUrl] = useState("");
   const [avatarAlt, setAvatarAlt] = useState("");
 
+  const [activeTab, setActiveTab] = useState<
+    "overview" | "bookings" | "venues"
+  >("overview");
+
   useEffect(() => {
     if (!user) navigate("/login");
   }, [user, navigate]);
@@ -24,7 +34,11 @@ export default function Profile() {
     async function load() {
       if (!user || !token) return;
       try {
-        const data = await getProfile(user.name, token);
+        const data = await getProfile(user.name, token, {
+          venues: true,
+          bookings: true,
+          count: true,
+        });
         setProfile(data);
       } catch (err) {
         console.error(err);
@@ -49,7 +63,11 @@ export default function Profile() {
       await updateAvatar(user.name, token, avatarUrl.trim(), avatarAlt.trim());
       toast.success("Avatar updated successfully!");
 
-      const refreshed = await getProfile(user.name, token);
+      const refreshed = await getProfile(user.name, token, {
+        venues: true,
+        bookings: true,
+        count: true,
+      });
       setProfile(refreshed);
       setAvatarUrl("");
       setAvatarAlt("");
@@ -57,6 +75,37 @@ export default function Profile() {
       console.error(err);
     }
   }
+
+  async function handleCancelBooking(bookingId: string) {
+    if (!token || !profile) return;
+
+    const confirmed = window.confirm("Are you sure?");
+    if (!confirmed) return;
+
+    try {
+      await cancelBooking(bookingId, token);
+
+      setProfile((prev) =>
+        prev
+          ? {
+              ...prev,
+              bookings: prev.bookings?.filter(
+                (booking) => booking.id !== bookingId
+              ),
+              _count: prev._count
+                ? {
+                    ...prev._count,
+                    bookings: Math.max(0, (prev._count.bookings ?? 1) - 1),
+                  }
+                : prev._count,
+            }
+          : prev
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   if (loading) {
     return (
       <section className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -76,102 +125,73 @@ export default function Profile() {
   return (
     <section className="min-h-screen bg-gray-50">
       <div className="max-w-5xl mx-auto px-6 py-10">
-        <div className="bg-white rounded-2xl shadow-sm p-6 mb-8 border border-gray-100">
-          <div className="flex flex-col sm:flex-row items-center gap-6">
-            <img
-              src={profile.avatar?.url || "https://placehold.co/160x160"}
-              alt={profile.avatar?.alt || profile.name}
-              className="w-28 h-28 rounded-full object-cover border border-gray-200"
-            />
-
-            <div className="flex-1 text-center sm:text-left">
-              <h1 className="text-2xl font-bold text-gray-900">
-                {profile.name}
-              </h1>
-              <p className="text-gray-600">{profile.email}</p>
-
-              <div className="mt-3">
-                {profile.venueManager ? (
-                  <span className="inline-block bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
-                    Venue Manager
-                  </span>
-                ) : (
-                  <span className="inline-block bg-gray-200 text-gray-700 text-xs font-semibold px-3 py-1 rounded-full">
-                    Customer
-                  </span>
-                )}
-              </div>
-            </div>
-
-            {profile._count && (
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-gray-50 rounded-xl px-4 py-3 text-center">
-                  <div className="text-xl font-bold text-gray-900">
-                    {profile._count.venues ?? 0}
-                  </div>
-                  <div className="text-xs text-gray-500">Venues</div>
-                </div>
-                <div className="bg-gray-50 rounded-xl px-4 py-3 text-center">
-                  <div className="text-xl font-bold text-gray-900">
-                    {profile._count.bookings ?? 0}
-                  </div>
-                  <div className="text-xs text-gray-500">Bookings</div>
-                </div>
-              </div>
-            )}
-          </div>
+        <div className="mb-6 flex gap-6 border-b border-gray-200">
+          {[
+            { id: "overview", label: "Overview" },
+            { id: "bookings", label: "Bookings", show: !profile.venueManager },
+            { id: "venues", label: "Your Venues", show: profile.venueManager },
+          ].map(
+            (tab) =>
+              tab.show !== false && (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as typeof activeTab)}
+                  className={`px-3 py-2 -mb-px text-sm font-medium border-b-2 ${
+                    activeTab === tab.id
+                      ? "border-blue-600 text-blue-600"
+                      : "border-transparent text-gray-500 hover:text-gray-700"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              )
+          )}
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">
-            Update avatar
-          </h2>
-          <form
-            onSubmit={handleAvatarSubmit}
-            className="grid sm:grid-cols-3 gap-4"
-          >
-            <div className="sm:col-span-2">
-              <label
-                htmlFor="avatarUrl"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Image URL
-              </label>
-              <input
-                id="avatarUrl"
-                type="url"
-                value={avatarUrl}
-                onChange={(e) => setAvatarUrl(e.target.value)}
-                placeholder="https://…"
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        <AnimatePresence mode="wait">
+          {activeTab === "overview" && (
+            <motion.div
+              key="overview"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+            >
+              <OverviewTab
+                profile={profile}
+                avatarUrl={avatarUrl}
+                avatarAlt={avatarAlt}
+                setAvatarUrl={setAvatarUrl}
+                setAvatarAlt={setAvatarAlt}
+                handleAvatarSubmit={handleAvatarSubmit}
               />
-            </div>
-            <div>
-              <label
-                htmlFor="avatarAlt"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Alt text (optional)
-              </label>
-              <input
-                id="avatarAlt"
-                type="text"
-                value={avatarAlt}
-                onChange={(e) => setAvatarAlt(e.target.value)}
-                placeholder="Profile picture"
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            </motion.div>
+          )}
+
+          {activeTab === "bookings" && (
+            <motion.div
+              key="bookings"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+            >
+              <BookingsTab
+                bookings={profile.bookings}
+                onCancelBooking={handleCancelBooking}
               />
-            </div>
-            <div className="sm:col-span-3">
-              <button
-                type="submit"
-                className="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg transition"
-              >
-                Save avatar
-              </button>
-            </div>
-          </form>
-        </div>
+            </motion.div>
+          )}
+
+          {activeTab === "venues" && (
+            <motion.div
+              key="venues"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+            >
+              <VenuesTab venues={profile.venues ?? []} />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </section>
   );

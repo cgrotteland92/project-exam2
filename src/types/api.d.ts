@@ -19,6 +19,14 @@ export interface ProfileResponse extends AuthUser {
     venues: number;
     bookings: number;
   };
+  venues?: Venue[];
+  bookings?: {
+    id: string;
+    dateFrom: string;
+    dateTo: string;
+    guests: number;
+    venue?: Venue;
+  }[];
 }
 
 export interface Venue {
@@ -31,4 +39,14 @@ export interface Venue {
   location?: { address?: string; city?: string; country?: string };
   owner?: { name: string; email: string };
   avatar?: { url: string; alt?: string };
+}
+
+export interface Booking {
+  id: string;
+  dateFrom: string;
+  dateTo: string;
+  guests: number;
+  venue?: Venue;
+  created?: string;
+  updated?: string;
 }

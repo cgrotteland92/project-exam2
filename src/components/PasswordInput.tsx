@@ -6,6 +6,7 @@ interface PasswordInputProps {
   value: string;
   onChange: (value: string) => void;
   required?: boolean;
+  autoComplete?: string;
 }
 
 export default function PasswordInput({
@@ -14,6 +15,7 @@ export default function PasswordInput({
   value,
   onChange,
   required = false,
+  autoComplete,
 }: PasswordInputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -32,6 +34,7 @@ export default function PasswordInput({
           id={id}
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          autoComplete={autoComplete}
           required={required}
           className="w-full border border-gray-300 rounded-lg px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="••••••••"
