@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { getVenues } from "../api/venuesApi";
 import type { Venue } from "../types/api.d.ts";
 
@@ -85,9 +86,12 @@ export default function Home() {
                         <p className="text-lg font-bold text-blue-600">
                           {venue.price} NOK / night
                         </p>
-                        <button className="text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition">
+                        <Link
+                          to={`/venues/${venue.id}`}
+                          className="text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition"
+                        >
                           View Details
-                        </button>
+                        </Link>
                       </div>
                     </div>
                   </motion.div>
