@@ -5,6 +5,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import VenueDetails from "./pages/VenueDetails";
 
 export default function App() {
   return (
@@ -13,6 +14,7 @@ export default function App() {
       <main className="grow">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/venues/:id" element={<VenueDetails />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />

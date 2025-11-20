@@ -3,13 +3,14 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { getVenues } from "../api/venuesApi";
 import type { Venue } from "../types/api.d.ts";
-
+import VenueSearchBar from "../components/VenueSearchBar.tsx";
 /**
  * Home page showing a list of venues.
  * @component
  */
 export default function Home() {
   const [venues, setVenues] = useState<Venue[]>([]);
+  const [filteredVenues, setFilteredVenues] = useState<Venue[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -17,6 +18,7 @@ export default function Home() {
       try {
         const data = await getVenues();
         setVenues(data);
+        setFilteredVenues(data);
       } catch (error) {
         console.error("Error fetching venues:", error);
       } finally {
@@ -27,12 +29,41 @@ export default function Home() {
     fetchVenues();
   }, []);
 
+  function handleSearch({
+    query,
+    guests,
+  }: {
+    query: string;
+    checkIn: string;
+    checkOut: string;
+    guests: number;
+  }) {
+    const q = query.trim().toLowerCase();
+
+    const result = venues.filter((venue) => {
+      const matchesQuery =
+        !q ||
+        venue.name.toLowerCase().includes(q) ||
+        venue.location?.city?.toLowerCase().includes(q) ||
+        venue.location?.country?.toLowerCase().includes(q);
+
+      const matchesGuests =
+        !guests || (venue.maxGuests && venue.maxGuests >= guests);
+
+      return matchesQuery && matchesGuests;
+    });
+
+    setFilteredVenues(result);
+  }
+
   return (
     <section className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-6 py-12">
         <h1 className="text-4xl font-bold mb-10 text-center text-gray-800 tracking-tight">
           Explore Unique Venues
         </h1>
+
+        <VenueSearchBar onSearch={handleSearch} />
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
           <AnimatePresence>
@@ -47,7 +78,7 @@ export default function Home() {
                     transition={{ duration: 0.3 }}
                   />
                 ))
-              : venues.map((venue) => (
+              : filteredVenues.map((venue) => (
                   <motion.div
                     key={venue.id}
                     className="group bg-white shadow-sm rounded-2xl overflow-hidden border border-gray-100"
