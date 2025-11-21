@@ -1,4 +1,4 @@
-import type { Booking } from "../types/api";
+import type { Booking } from "../../types/api";
 
 interface BookingsTabProps {
   bookings?: Booking[];
@@ -79,7 +79,7 @@ export default function BookingsTab({
 
   return (
     <div>
-      {section("Upcoming bookings", upcoming, true)}
+      {section("Upcoming trips", upcoming, true)}
       {section("Past bookings", past, false)}
     </div>
   );

@@ -54,3 +54,33 @@ export async function getVenueById(id: string): Promise<Venue> {
   const json = await res.json();
   return json.data as Venue;
 }
+
+/**
+ * Fetch all venues owned by a specific profile (venue manager), including bookings.
+ */
+export async function getManagerVenuesWithBookings(
+  name: string,
+  token: string
+): Promise<Venue[]> {
+  const res = await fetch(
+    `${API_BASE}/holidaze/profiles/${name}/venues?_bookings=true`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "X-Noroff-API-Key": API_KEY,
+      },
+    }
+  );
+
+  if (!res.ok) {
+    const errorBody = await res.json().catch(() => null);
+    throw new Error(
+      errorBody?.errors?.[0]?.message ||
+        errorBody?.message ||
+        "Failed to fetch managed venues"
+    );
+  }
+
+  const json = await res.json();
+  return json.data as Venue[];
+}

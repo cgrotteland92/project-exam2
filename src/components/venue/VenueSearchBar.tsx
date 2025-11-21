@@ -1,5 +1,7 @@
 import { useState } from "react";
-import DateRangePicker from "./DateRangePicker";
+import { DayPicker } from "react-day-picker";
+import type { DateRange } from "react-day-picker";
+import "react-day-picker/dist/style.css";
 
 interface SearchValues {
   query: string;
@@ -14,9 +16,13 @@ interface VenueSearchBarProps {
 
 export default function VenueSearchBar({ onSearch }: VenueSearchBarProps) {
   const [query, setQuery] = useState("");
-  const [checkIn, setCheckIn] = useState("");
-  const [checkOut, setCheckOut] = useState("");
   const [guests, setGuests] = useState(1);
+
+  const [range, setRange] = useState<DateRange | undefined>();
+  const [openCalendar, setOpenCalendar] = useState(false);
+
+  const checkIn = range?.from ? range.from.toISOString().slice(0, 10) : "";
+  const checkOut = range?.to ? range.to.toISOString().slice(0, 10) : "";
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -29,6 +35,7 @@ export default function VenueSearchBar({ onSearch }: VenueSearchBarProps) {
       className="bg-white shadow-lg rounded-2xl p-4 mb-10 border border-gray-100 max-w-5xl mx-auto"
     >
       <div className="flex flex-col gap-4 md:flex-row md:items-end">
+        {/* Destination */}
         <div className="flex-1">
           <label className="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">
             Destination
@@ -42,17 +49,33 @@ export default function VenueSearchBar({ onSearch }: VenueSearchBarProps) {
           />
         </div>
 
-        <div className="w-full md:w-64">
-          <DateRangePicker
-            checkIn={checkIn}
-            checkOut={checkOut}
-            onChange={({ checkIn, checkOut }) => {
-              setCheckIn(checkIn);
-              setCheckOut(checkOut);
-            }}
-          />
+        {/* Date Picker Trigger */}
+        <div className="relative w-full md:w-64">
+          <label className="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">
+            Dates
+          </label>
+
+          <button
+            type="button"
+            onClick={() => setOpenCalendar(!openCalendar)}
+            className="w-full border border-gray-300 rounded-xl px-3 py-2.5 text-left focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+          >
+            {checkIn && checkOut ? `${checkIn} → ${checkOut}` : "Select dates"}
+          </button>
+
+          {openCalendar && (
+            <div className="absolute z-40 mt-2 bg-white border border-gray-200 shadow-xl rounded-xl p-3">
+              <DayPicker
+                mode="range"
+                numberOfMonths={2}
+                selected={range}
+                onSelect={setRange}
+              />
+            </div>
+          )}
         </div>
 
+        {/* Travelers */}
         <div>
           <label className="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">
             Travelers
@@ -66,14 +89,13 @@ export default function VenueSearchBar({ onSearch }: VenueSearchBarProps) {
           />
         </div>
 
-        <div className="md:self-stretch flex items-end">
-          <button
-            type="submit"
-            className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-xl text-sm md:text-base transition shadow-sm"
-          >
-            Search
-          </button>
-        </div>
+        {/* Search*/}
+        <button
+          type="submit"
+          className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-xl text-sm md:text-base transition shadow-sm"
+        >
+          Search
+        </button>
       </div>
     </form>
   );

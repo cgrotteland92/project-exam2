@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { getVenues } from "../api/venuesApi";
 import type { Venue } from "../types/api.d.ts";
-import VenueSearchBar from "../components/VenueSearchBar.tsx";
+import VenueSearchBar from "../components/venue/VenueSearchBar";
 /**
  * Home page showing a list of venues.
  * @component

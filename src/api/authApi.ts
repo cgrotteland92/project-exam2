@@ -95,7 +95,8 @@ export async function getProfile(
     );
   }
 
-  return res.json() as Promise<ProfileResponse>;
+  const json = await res.json();
+  return json.data as ProfileResponse;
 }
 
 /**
@@ -107,15 +108,20 @@ export async function updateAvatar(
   token: string,
   avatarUrl: string,
   alt: string
-): Promise<AuthUser> {
-  const res = await fetch(`${API_BASE}/holidaze/profiles/${name}/media`, {
+): Promise<ProfileResponse> {
+  const res = await fetch(`${API_BASE}/holidaze/profiles/${name}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
       "X-Noroff-API-Key": API_KEY,
     },
-    body: JSON.stringify({ avatar: { url: avatarUrl, alt } }),
+    body: JSON.stringify({
+      avatar: {
+        url: avatarUrl,
+        alt,
+      },
+    }),
   });
 
   if (!res.ok) {
@@ -127,5 +133,6 @@ export async function updateAvatar(
     );
   }
 
-  return res.json() as Promise<AuthUser>;
+  const json = await res.json();
+  return json.data as ProfileResponse;
 }
