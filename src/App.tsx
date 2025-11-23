@@ -3,8 +3,9 @@ import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
+import Manager from "./pages/Manager";
+import Navbar from "./components/ui/Navbar";
+import Footer from "./components/ui/Footer";
 import VenueDetails from "./pages/VenueDetails";
 
 export default function App() {
@@ -18,6 +19,7 @@ export default function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/manager" element={<Manager />} />
         </Routes>
       </main>
       <Footer />

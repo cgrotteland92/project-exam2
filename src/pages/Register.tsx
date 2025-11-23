@@ -4,12 +4,13 @@ import {
   isValidPassword,
   isNotEmpty,
 } from "../utils/validation";
-import PasswordInput from "../components/PasswordInput";
+import PasswordInput from "../components/ui/PasswordInput";
 import type { FormEvent } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { registerUser } from "../api/authApi";
-import { useAuth } from "../context/useAuth";
+import { useAuth } from "../hooks/useAuth";
+import Button from "../components/ui/Button";
 
 /**
  * Register page where users can create a new account.
@@ -138,13 +139,15 @@ export default function Register() {
             </label>
           </div>
 
-          <button
+          <Button
             type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50"
+            variant="primary"
+            size="md"
+            className="w-full mt-2"
+            isLoading={loading}
           >
             {loading ? "Creating account..." : "Register"}
-          </button>
+          </Button>
         </form>
 
         <p className="text-center text-sm text-gray-600 mt-4">

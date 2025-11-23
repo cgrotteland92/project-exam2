@@ -3,11 +3,12 @@ import { DayPicker } from "react-day-picker";
 import type { DateRange } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 
-import type { Venue, Booking } from "../../types/api";
-import { useAuth } from "../../context/useAuth";
+import type { Venue, Booking } from "../../../types/api";
+import { useAuth } from "../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-import { createBooking } from "../../api/bookingsApi";
+import { createBooking } from "../../../api/bookingsApi";
 import toast from "react-hot-toast";
+import Button from "../../ui/Button";
 
 interface VenueBookingSectionProps {
   venue: Venue;
@@ -142,14 +143,15 @@ export default function VenueBookingSection({
             </p>
           </div>
 
-          <button
+          <Button
             type="button"
-            onClick={handleBookNow}
+            variant="primary"
+            size="md"
             disabled={!checkIn || !checkOut}
-            className="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold px-5 py-2 rounded-lg transition"
+            onClick={handleBookNow}
           >
             Book now
-          </button>
+          </Button>
         </div>
       </div>
     </div>

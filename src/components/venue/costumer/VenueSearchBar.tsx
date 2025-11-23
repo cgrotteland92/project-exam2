@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { DayPicker } from "react-day-picker";
 import type { DateRange } from "react-day-picker";
+import Button from "../../ui/Button";
 import "react-day-picker/dist/style.css";
 
 interface SearchValues {
@@ -55,13 +56,15 @@ export default function VenueSearchBar({ onSearch }: VenueSearchBarProps) {
             Dates
           </label>
 
-          <button
+          <Button
             type="button"
+            variant="secondary"
+            size="md"
             onClick={() => setOpenCalendar(!openCalendar)}
-            className="w-full border border-gray-300 rounded-xl px-3 py-2.5 text-left focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+            className="w-full text-left"
           >
             {checkIn && checkOut ? `${checkIn} → ${checkOut}` : "Select dates"}
-          </button>
+          </Button>
 
           {openCalendar && (
             <div className="absolute z-40 mt-2 bg-white border border-gray-200 shadow-xl rounded-xl p-3">

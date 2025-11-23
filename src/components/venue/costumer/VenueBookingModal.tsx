@@ -4,10 +4,10 @@ import type { DateRange } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { toast } from "react-hot-toast";
 
-import type { Venue, Booking } from "../../types/api";
-import { useAuth } from "../../context/useAuth";
-import { createBooking } from "../../api/bookingsApi";
-import Button from "../ui/Button";
+import type { Venue, Booking } from "../../../types/api";
+import { useAuth } from "../../../hooks/useAuth";
+import { createBooking } from "../../../api/bookingsApi";
+import Button from "../../ui/Button";
 
 interface VenueBookingModalProps {
   venue: Venue;
@@ -115,13 +115,9 @@ export default function VenueBookingModal({
               Select your dates and guests to confirm your stay.
             </p>
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="text-sm text-gray-500 hover:text-gray-700"
-          >
+          <Button type="button" size="sm" variant="ghost" onClick={onClose}>
             Close
-          </button>
+          </Button>
         </div>
 
         <div className="grid md:grid-cols-2 gap-8">

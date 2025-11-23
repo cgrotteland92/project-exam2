@@ -1,4 +1,5 @@
-import type { Booking } from "../../types/api";
+import type { Booking } from "../../../types/api";
+import Button from "../../ui/Button";
 
 interface BookingsTabProps {
   bookings?: Booking[];
@@ -62,13 +63,14 @@ export default function BookingsTab({
               </p>
 
               {showCancel && (
-                <button
+                <Button
                   type="button"
+                  size="sm"
+                  variant="danger"
                   onClick={() => onCancelBooking(booking.id)}
-                  className="text-sm text-red-600 hover:text-red-700 font-medium"
                 >
                   Cancel booking
-                </button>
+                </Button>
               )}
             </div>
           ))}

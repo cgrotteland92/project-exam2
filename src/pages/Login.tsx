@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { isValidNoroffEmail, isValidPassword } from "../utils/validation";
-import PasswordInput from "../components/PasswordInput";
+import PasswordInput from "../components/ui/PasswordInput";
 import type { FormEvent } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { loginUser } from "../api/authApi";
-import { useAuth } from "../context/useAuth";
+import { useAuth } from "../hooks/useAuth";
+import Button from "../components/ui/Button";
 
 /**
  * Login page where users can log in with Noroff credentials.
@@ -100,13 +101,15 @@ export default function Login() {
             />
           </div>
 
-          <button
+          <Button
             type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50"
+            variant="primary"
+            size="md"
+            className="w-full mt-2"
+            isLoading={loading}
           >
-            {loading ? "Logging in..." : "Login"}
-          </button>
+            Log in
+          </Button>
         </form>
 
         <p className="text-center text-sm text-gray-600 mt-4">

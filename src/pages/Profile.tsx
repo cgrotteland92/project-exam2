@@ -3,15 +3,16 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 
-import { useAuth } from "../context/useAuth";
+import { useAuth } from "../hooks/useAuth";
 import { getProfile, updateAvatar } from "../api/authApi";
 import { cancelBooking } from "../api/bookingsApi";
 import { getManagerVenuesWithBookings } from "../api/venuesApi";
 
 import type { ProfileResponse, Venue } from "../types/api";
-import BookingsTab from "../components/venue/BookingsTab";
+import Button from "../components/ui/Button";
+import BookingsTab from "../components/venue/costumer/BookingsTab";
 import VenuesTab from "../components/venue/VenuesTab";
-import ManagerVenueBookings from "../components/venue/ManagerVenueBookings";
+import ManagerVenueBookings from "../components/venue/manager/ManagerVenueBookings";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -194,13 +195,14 @@ export default function Profile() {
             </div>
 
             {/* Edit Button */}
-            <button
+            <Button
               type="button"
+              variant="secondary"
+              size="md"
               onClick={() => setShowAvatarModal(true)}
-              className="text-sm font-medium px-5 py-2.5 rounded-xl bg-gray-50 text-gray-700 hover:bg-gray-100 transition-colors duration-200 border border-gray-200"
             >
               Edit avatar
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -277,7 +279,16 @@ export default function Profile() {
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <VenuesTab venues={managerVenues} />
+                  <VenuesTab
+                    venues={managerVenues}
+                    onVenueUpdated={(updated) =>
+                      setManagerVenues((prev) =>
+                        prev.map((v) =>
+                          v.id === updated.id ? { ...v, ...updated } : v
+                        )
+                      )
+                    }
+                  />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -296,7 +307,7 @@ export default function Profile() {
             <h2 className="text-2xl font-semibold text-gray-900 mb-6">
               Update avatar
             </h2>
-            <div className="space-y-5">
+            <form onSubmit={handleAvatarSubmit} className="space-y-5">
               <div>
                 <label
                   htmlFor="avatarUrl"
@@ -331,26 +342,23 @@ export default function Profile() {
               </div>
 
               <div className="flex justify-end gap-3 pt-4">
-                <button
+                <Button
                   type="button"
+                  variant="secondary"
+                  size="md"
                   onClick={() => {
                     setShowAvatarModal(false);
                     setAvatarUrl("");
                     setAvatarAlt("");
                   }}
-                  className="px-5 py-2.5 rounded-xl border border-gray-200 text-gray-700 font-medium hover:bg-gray-50 transition-colors duration-200"
                 >
                   Cancel
-                </button>
-                <button
-                  type="button"
-                  onClick={handleAvatarSubmit}
-                  className="px-5 py-2.5 rounded-xl bg-gray-900 text-white font-semibold hover:bg-gray-800 transition-colors duration-200 shadow-sm"
-                >
+                </Button>
+                <Button type="submit" variant="primary" size="sm">
                   Save avatar
-                </button>
+                </Button>
               </div>
-            </div>
+            </form>
           </motion.div>
         </div>
       )}

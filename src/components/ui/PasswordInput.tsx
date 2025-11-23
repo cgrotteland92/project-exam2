@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
+import Button from "./ui/Button";
 
 interface PasswordInputProps {
   id: string;
@@ -40,14 +42,16 @@ export default function PasswordInput({
           placeholder="••••••••"
         />
 
-        <button
+        <Button
           type="button"
+          variant="ghost"
+          size="sm"
           onClick={() => setShowPassword((prev) => !prev)}
           className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700"
           aria-label={showPassword ? "Hide password" : "Show password"}
         >
-          {showPassword ? "🙈" : "👁️"}
-        </button>
+          {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+        </Button>
       </div>
     </div>
   );

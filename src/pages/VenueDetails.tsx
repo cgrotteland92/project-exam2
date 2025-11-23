@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 
 import type { Venue, Booking } from "../types/api";
 import { getVenueById, getVenues } from "../api/venuesApi";
-import SkeletonVenueDetails from "../components/SkeletonVenueDetails";
+import SkeletonVenueDetails from "../components/venue/SkeletonVenueDetails";
 import Button from "../components/ui/Button";
 import VenueBookingModal from "../components/venue/VenueBookingModal";
 
