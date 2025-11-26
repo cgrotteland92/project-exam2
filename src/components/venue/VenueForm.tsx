@@ -6,8 +6,8 @@ export interface VenueFormValues {
   description: string;
   price: string;
   maxGuests: string;
-  mediaUrl: string;
-  mediaAlt: string;
+  rating: string;
+  media: { url: string; alt: string }[];
   address: string;
   city: string;
   country: string;
@@ -30,8 +30,8 @@ const defaultValues: VenueFormValues = {
   description: "",
   price: "",
   maxGuests: "1",
-  mediaUrl: "",
-  mediaAlt: "",
+  rating: "0",
+  media: [],
   address: "",
   city: "",
   country: "",
@@ -53,12 +53,37 @@ export default function VenueForm({
     ...initialValues,
   });
 
+  const [tempUrl, setTempUrl] = useState("");
+  const [tempAlt, setTempAlt] = useState("");
+
   function handleChange<K extends keyof VenueFormValues>(
     key: K,
     value: VenueFormValues[K]
   ) {
     setValues((prev) => ({ ...prev, [key]: value }));
   }
+
+  const handleAddImage = () => {
+    if (!tempUrl.trim()) return;
+    if (values.media.length >= 5) return;
+
+    const newImage = { url: tempUrl, alt: tempAlt };
+
+    setValues((prev) => ({
+      ...prev,
+      media: [...prev.media, newImage],
+    }));
+
+    setTempUrl("");
+    setTempAlt("");
+  };
+
+  const handleRemoveImage = (indexToRemove: number) => {
+    setValues((prev) => ({
+      ...prev,
+      media: prev.media.filter((_, index) => index !== indexToRemove),
+    }));
+  };
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -69,7 +94,7 @@ export default function VenueForm({
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Basic info */}
       <div className="grid md:grid-cols-2 gap-4">
-        <div>
+        <div className="md:col-span-2">
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Name
           </label>
@@ -77,11 +102,12 @@ export default function VenueForm({
             type="text"
             value={values.name}
             onChange={(e) => handleChange("name", e.target.value)}
-            className="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+            className="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-gray-900"
             placeholder="Cozy cabin by the fjord"
             required
           />
         </div>
+
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Price per night (NOK)
@@ -91,24 +117,45 @@ export default function VenueForm({
             min={1}
             value={values.price}
             onChange={(e) => handleChange("price", e.target.value)}
-            className="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+            className="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-gray-900"
             placeholder="1200"
             required
           />
         </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Max guests
-          </label>
-          <input
-            type="number"
-            min={1}
-            value={values.maxGuests}
-            onChange={(e) => handleChange("maxGuests", e.target.value)}
-            className="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
-            placeholder="4"
-            required
-          />
+
+        {/* Guests*/}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Max guests
+            </label>
+            <input
+              type="number"
+              min={1}
+              value={values.maxGuests}
+              onChange={(e) => handleChange("maxGuests", e.target.value)}
+              className="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-gray-900"
+              placeholder="4"
+              required
+            />
+          </div>
+
+          {/* Rating */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Rating (0-5)
+            </label>
+            <input
+              type="number"
+              min={0}
+              max={5}
+              step={1}
+              value={values.rating}
+              onChange={(e) => handleChange("rating", e.target.value)}
+              className="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-gray-900"
+              placeholder="0"
+            />
+          </div>
         </div>
       </div>
 
@@ -120,37 +167,91 @@ export default function VenueForm({
         <textarea
           value={values.description}
           onChange={(e) => handleChange("description", e.target.value)}
-          className="w-full border border-gray-200 rounded-xl px-4 py-2.5 h-24 resize-none focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
-          placeholder="Describe your venue, surroundings, and what makes it special."
+          className="w-full border border-gray-200 rounded-xl px-4 py-2.5 h-24 resize-none focus:outline-none focus:ring-2 focus:ring-gray-900"
+          placeholder="Describe your venue..."
+          required
         />
       </div>
 
-      {/* Media */}
-      <div className="grid md:grid-cols-3 gap-4">
-        <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Image URL
+      {/* Media Section */}
+      <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 space-y-4">
+        <div className="flex justify-between items-center">
+          <label className="block text-sm font-medium text-gray-700">
+            Images (Max 5)
           </label>
-          <input
-            type="url"
-            value={values.mediaUrl}
-            onChange={(e) => handleChange("mediaUrl", e.target.value)}
-            className="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
-            placeholder="https://…"
-          />
+          <span className="text-xs text-gray-500 font-medium">
+            {values.media.length} / 5
+          </span>
         </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Alt text
-          </label>
-          <input
-            type="text"
-            value={values.mediaAlt}
-            onChange={(e) => handleChange("mediaAlt", e.target.value)}
-            className="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
-            placeholder="Exterior of the venue"
-          />
-        </div>
+
+        {values.media.length > 0 && (
+          <div className="space-y-2">
+            {values.media.map((item, index) => (
+              <div
+                key={index}
+                className="flex items-center justify-between bg-white p-2 rounded-lg border border-gray-200 shadow-sm"
+              >
+                <div className="flex items-center gap-3 overflow-hidden">
+                  <img
+                    src={item.url}
+                    alt={item.alt}
+                    className="w-10 h-10 rounded-md object-cover bg-gray-100"
+                    onError={(e) =>
+                      (e.currentTarget.src =
+                        "https://placehold.co/100?text=Invalid")
+                    }
+                  />
+                  <span className="text-sm text-gray-600 truncate max-w-[200px]">
+                    {item.url}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveImage(index)}
+                  className="text-red-500 hover:text-red-700 text-sm font-medium px-2"
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {values.media.length < 5 ? (
+          <div className="grid md:grid-cols-[1fr_1fr_auto] gap-3 items-end">
+            <div>
+              <input
+                type="url"
+                value={tempUrl}
+                onChange={(e) => setTempUrl(e.target.value)}
+                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
+                placeholder="Image URL..."
+              />
+            </div>
+            <div>
+              <input
+                type="text"
+                value={tempAlt}
+                onChange={(e) => setTempAlt(e.target.value)}
+                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
+                placeholder="Alt text"
+              />
+            </div>
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              onClick={handleAddImage}
+              disabled={!tempUrl}
+            >
+              Add
+            </Button>
+          </div>
+        ) : (
+          <p className="text-sm text-orange-600 bg-orange-50 p-2 rounded-lg border border-orange-100">
+            Maximum of 5 images reached.
+          </p>
+        )}
       </div>
 
       {/* Location */}
@@ -163,8 +264,8 @@ export default function VenueForm({
             type="text"
             value={values.address}
             onChange={(e) => handleChange("address", e.target.value)}
-            className="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
-            placeholder="Street and number"
+            className="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-gray-900"
+            placeholder="Street"
           />
         </div>
         <div>
@@ -175,7 +276,7 @@ export default function VenueForm({
             type="text"
             value={values.city}
             onChange={(e) => handleChange("city", e.target.value)}
-            className="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+            className="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-gray-900"
             placeholder="Oslo"
           />
         </div>
@@ -187,7 +288,7 @@ export default function VenueForm({
             type="text"
             value={values.country}
             onChange={(e) => handleChange("country", e.target.value)}
-            className="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+            className="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-gray-900"
             placeholder="Norway"
           />
         </div>
@@ -200,6 +301,7 @@ export default function VenueForm({
             type="checkbox"
             checked={values.wifi}
             onChange={(e) => handleChange("wifi", e.target.checked)}
+            className="rounded text-gray-900 focus:ring-gray-900"
           />
           Wifi
         </label>
@@ -208,6 +310,7 @@ export default function VenueForm({
             type="checkbox"
             checked={values.parking}
             onChange={(e) => handleChange("parking", e.target.checked)}
+            className="rounded text-gray-900 focus:ring-gray-900"
           />
           Parking
         </label>
@@ -216,6 +319,7 @@ export default function VenueForm({
             type="checkbox"
             checked={values.breakfast}
             onChange={(e) => handleChange("breakfast", e.target.checked)}
+            className="rounded text-gray-900 focus:ring-gray-900"
           />
           Breakfast
         </label>
@@ -224,6 +328,7 @@ export default function VenueForm({
             type="checkbox"
             checked={values.pets}
             onChange={(e) => handleChange("pets", e.target.checked)}
+            className="rounded text-gray-900 focus:ring-gray-900"
           />
           Pets allowed
         </label>

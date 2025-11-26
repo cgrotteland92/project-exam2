@@ -30,8 +30,13 @@ export default function EditVenueModal({
     description: venue.description ?? "",
     price: String(venue.price),
     maxGuests: String(venue.maxGuests),
-    mediaUrl: venue.media?.[0]?.url ?? "",
-    mediaAlt: venue.media?.[0]?.alt ?? "",
+
+    media:
+      venue.media?.map((img) => ({
+        url: img.url,
+        alt: img.alt || "",
+      })) || [],
+
     address: venue.location?.address ?? "",
     city: venue.location?.city ?? "",
     country: venue.location?.country ?? "",
@@ -49,6 +54,7 @@ export default function EditVenueModal({
 
     const priceNumber = Number(values.price);
     const guestsNumber = Number(values.maxGuests);
+    const ratingNumber = Number(values.rating);
 
     if (!priceNumber || priceNumber <= 0) {
       toast.error("Please enter a valid price.");
@@ -57,6 +63,11 @@ export default function EditVenueModal({
 
     if (!guestsNumber || guestsNumber < 1) {
       toast.error("Max guests must be at least 1.");
+      return;
+    }
+
+    if (ratingNumber < 0 || ratingNumber > 5) {
+      toast.error("Rating must be between 0 and 5.");
       return;
     }
 
@@ -70,14 +81,8 @@ export default function EditVenueModal({
           description: values.description.trim() || undefined,
           price: priceNumber,
           maxGuests: guestsNumber,
-          media: values.mediaUrl
-            ? [
-                {
-                  url: values.mediaUrl.trim(),
-                  alt: values.mediaAlt.trim() || undefined,
-                },
-              ]
-            : undefined,
+          rating: ratingNumber,
+          media: values.media.length > 0 ? values.media : undefined,
           location:
             values.address || values.city || values.country
               ? {

@@ -31,6 +31,7 @@ export default function CreateVenueModal({
 
     const priceNumber = Number(values.price);
     const guestsNumber = Number(values.maxGuests);
+    const ratingNumber = Number(values.rating);
 
     if (!priceNumber || priceNumber <= 0) {
       toast.error("Please enter a valid price.");
@@ -39,6 +40,11 @@ export default function CreateVenueModal({
 
     if (!guestsNumber || guestsNumber < 1) {
       toast.error("Max guests must be at least 1.");
+      return;
+    }
+
+    if (ratingNumber < 0 || ratingNumber > 5) {
+      toast.error("Rating must be between 0 and 5.");
       return;
     }
 
@@ -51,14 +57,10 @@ export default function CreateVenueModal({
           description: values.description.trim() || undefined,
           price: priceNumber,
           maxGuests: guestsNumber,
-          media: values.mediaUrl
-            ? [
-                {
-                  url: values.mediaUrl.trim(),
-                  alt: values.mediaAlt.trim() || undefined,
-                },
-              ]
-            : undefined,
+          rating: ratingNumber,
+
+          media: values.media.length > 0 ? values.media : undefined,
+
           location:
             values.address || values.city || values.country
               ? {

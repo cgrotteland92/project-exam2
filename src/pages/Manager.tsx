@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { useAuth } from "../hooks/useAuth";
@@ -7,12 +6,11 @@ import { getManagerVenuesWithBookings } from "../api/venuesApi";
 import type { Venue } from "../types/api";
 
 import ManagerVenueBookings from "../components/venue/manager/ManagerVenueBookings";
-import CreateVenueModal from "../components/venue/manager/createVenueModal";
+import CreateVenueModal from "../components/venue/manager/CreateVenueModal";
 import VenuesTab from "../components/venue/VenuesTab";
 import Button from "../components/ui/Button";
 
 export default function Manager() {
-  const navigate = useNavigate();
   const { user, token } = useAuth();
 
   const [venues, setVenues] = useState<Venue[]>([]);
@@ -21,19 +19,8 @@ export default function Manager() {
   const [showCreateModal, setShowCreateModal] = useState(false);
 
   useEffect(() => {
-    if (!user) {
-      navigate("/login");
-      return;
-    }
-
-    if (!user.venueManager) {
-      navigate("/profile");
-    }
-  }, [user, navigate]);
-
-  useEffect(() => {
     async function load() {
-      if (!user || !token || !user.venueManager) return;
+      if (!user || !token) return;
 
       setLoading(true);
       try {
@@ -49,7 +36,7 @@ export default function Manager() {
     load();
   }, [user, token]);
 
-  if (!user || !user.venueManager) {
+  if (!user) {
     return null;
   }
 
@@ -154,6 +141,9 @@ export default function Manager() {
                         v.id === updated.id ? { ...v, ...updated } : v
                       )
                     )
+                  }
+                  onVenueDeleted={(deletedId) =>
+                    setVenues((prev) => prev.filter((v) => v.id !== deletedId))
                   }
                 />
               </motion.div>

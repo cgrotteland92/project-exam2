@@ -1,3 +1,7 @@
+export interface Media {
+  url: string;
+  alt?: string;
+}
 export interface Avatar {
   url: string;
   alt?: string;
@@ -41,11 +45,17 @@ export interface Venue {
     continent?: string;
   };
 
-  owner?: { name: string; email: string };
-  avatar?: { url: string; alt?: string };
+  owner?: {
+    name: string;
+    email: string;
+    avatar?: Avatar;
+    banner?: Avatar;
+    bio?: string;
+  };
 
   bookings?: Booking[];
 }
+
 export interface Booking {
   id: string;
   dateFrom: string;

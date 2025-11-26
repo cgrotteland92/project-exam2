@@ -90,6 +90,7 @@ export interface CreateVenueInput {
   description?: string;
   price: number;
   maxGuests: number;
+  rating?: number;
   media?: { url: string; alt?: string }[];
   meta?: {
     wifi?: boolean;
@@ -134,6 +135,28 @@ export async function createVenue(
   return json.data as Venue;
 }
 
+/**
+ * Delete a venue by ID.
+ */
+export async function deleteVenue(id: string, token: string): Promise<void> {
+  const res = await fetch(`${API_BASE}/holidaze/venues/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "X-Noroff-API-Key": API_KEY,
+    },
+  });
+
+  if (!res.ok) {
+    const errorBody = await res.json().catch(() => null);
+    throw new Error(
+      errorBody?.errors?.[0]?.message ||
+        errorBody?.message ||
+        "Failed to delete venue"
+    );
+  }
+}
+
 export type UpdateVenueInput = CreateVenueInput;
 
 /**
@@ -165,4 +188,30 @@ export async function updateVenue(
 
   const json = await res.json();
   return json.data as Venue;
+}
+
+/**
+ * Search for venues using the API search endpoint.
+ */
+export async function searchVenues(query: string): Promise<Venue[]> {
+  const res = await fetch(
+    `${API_BASE}/holidaze/venues/search?q=${encodeURIComponent(query)}`,
+    {
+      headers: {
+        "X-Noroff-API-Key": API_KEY,
+      },
+    }
+  );
+
+  if (!res.ok) {
+    const errorBody = await res.json().catch(() => null);
+    throw new Error(
+      errorBody?.errors?.[0]?.message ||
+        errorBody?.message ||
+        "Failed to search venues"
+    );
+  }
+
+  const json = await res.json();
+  return json.data as Venue[];
 }
