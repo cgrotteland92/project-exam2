@@ -42,8 +42,8 @@ export default function Manager() {
 
   if (loading) {
     return (
-      <section className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100/50 flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-gray-900 border-t-transparent rounded-full animate-spin" />
+      <section className="min-h-screen bg-stone-50 flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-teal-600 border-t-transparent rounded-full animate-spin" />
       </section>
     );
   }
@@ -55,15 +55,15 @@ export default function Manager() {
   );
 
   return (
-    <section className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100/50">
+    <section className="min-h-screen bg-stone-50">
       <div className="max-w-6xl mx-auto px-6 py-12 space-y-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-1">
+            <h1 className="text-3xl font-bold text-stone-900 mb-1">
               Manager dashboard
             </h1>
-            <p className="text-gray-600">
+            <p className="text-stone-500">
               Manage your venues and keep track of upcoming bookings.
             </p>
           </div>
@@ -72,6 +72,7 @@ export default function Manager() {
             variant="primary"
             size="md"
             onClick={() => setShowCreateModal(true)}
+            className="shadow-lg shadow-teal-900/10"
           >
             Create new venue
           </Button>
@@ -79,19 +80,23 @@ export default function Manager() {
 
         {/* Stats */}
         <div className="grid sm:grid-cols-2 gap-4">
-          <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
-            <p className="text-sm text-gray-500 mb-1">Your venues</p>
-            <p className="text-2xl font-bold text-gray-900">{totalVenues}</p>
+          <div className="bg-white rounded-2xl p-6 border border-stone-100 shadow-sm">
+            <p className="text-sm font-medium text-stone-500 mb-1">
+              Your venues
+            </p>
+            <p className="text-3xl font-bold text-stone-900">{totalVenues}</p>
           </div>
-          <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
-            <p className="text-sm text-gray-500 mb-1">Total bookings</p>
-            <p className="text-2xl font-bold text-gray-900">{totalBookings}</p>
+          <div className="bg-white rounded-2xl p-6 border border-stone-100 shadow-sm">
+            <p className="text-sm font-medium text-stone-500 mb-1">
+              Total bookings
+            </p>
+            <p className="text-3xl font-bold text-stone-900">{totalBookings}</p>
           </div>
         </div>
 
-        <div className="bg-white rounded-3xl shadow-sm p-8 border border-gray-100/50 mt-4">
+        <div className="bg-white rounded-3xl shadow-sm p-8 border border-stone-100 mt-4">
           {/* Tabs */}
-          <div className="mb-8 flex gap-1 bg-gray-50 rounded-xl p-1 w-fit">
+          <div className="mb-8 flex gap-1 bg-stone-50 rounded-xl p-1 w-fit border border-stone-100">
             {[
               { id: "bookings", label: "Bookings" },
               { id: "venues", label: "Your venues" },
@@ -102,8 +107,8 @@ export default function Manager() {
                 onClick={() => setActiveTab(tab.id as "bookings" | "venues")}
                 className={`px-6 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
                   activeTab === tab.id
-                    ? "bg-white text-gray-900 shadow-sm"
-                    : "text-gray-600 hover:text-gray-900"
+                    ? "bg-white text-stone-900 shadow-sm ring-1 ring-stone-200"
+                    : "text-stone-500 hover:text-stone-700 hover:bg-stone-100/50"
                 }`}
               >
                 {tab.label}
@@ -151,6 +156,7 @@ export default function Manager() {
           </AnimatePresence>
         </div>
       </div>
+
       {showCreateModal && (
         <CreateVenueModal
           isOpen={showCreateModal}

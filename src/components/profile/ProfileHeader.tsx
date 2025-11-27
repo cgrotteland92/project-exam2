@@ -28,17 +28,17 @@ export default function ProfileHeader({
 
         {/* Profile Info */}
         <div className="flex-1 text-center sm:text-left">
-          <h1 className="text-3xl font-bold text-gray-900 mb-1">
+          <h1 className="text-3xl font-bold text-stone-900 mb-1">
             {profile.name}
           </h1>
-          <p className="text-gray-500 mb-4">{profile.email}</p>
+          <p className="text-stone-500 mb-4">{profile.email}</p>
 
           <div className="flex flex-col sm:flex-row sm:items-center gap-3 justify-center sm:justify-start">
             <span
               className={`inline-flex items-center px-4 py-1.5 text-sm font-medium rounded-full ${
                 isManager
                   ? "bg-gray-900 text-white"
-                  : "bg-gray-100 text-gray-700"
+                  : "bg-gray-100 text-stone-700"
               }`}
             >
               {isManager ? "Venue Manager" : "Customer"}
@@ -46,15 +46,15 @@ export default function ProfileHeader({
 
             {profile._count && (
               <div className="flex gap-4 text-sm">
-                <span className="text-gray-600">
-                  <strong className="text-gray-900 font-semibold">
+                <span className="text-stone-600">
+                  <strong className="text-stone-900 font-semibold">
                     {profile._count.bookings ?? 0}
                   </strong>{" "}
                   Bookings
                 </span>
                 {isManager && (
-                  <span className="text-gray-600">
-                    <strong className="text-gray-900 font-semibold">
+                  <span className="text-stone-600">
+                    <strong className="text-stone-900 font-semibold">
                       {profile._count.venues ?? 0}
                     </strong>{" "}
                     Venues

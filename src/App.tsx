@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
+import Venues from "./pages/AllVenues";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
@@ -15,6 +16,7 @@ export default function App() {
       <main className="grow">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/venues" element={<Venues />} />
           <Route path="/venues/:id" element={<VenueDetails />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/register" element={<Register />} />

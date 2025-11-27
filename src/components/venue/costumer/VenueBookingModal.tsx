@@ -104,14 +104,14 @@ export default function VenueBookingModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm flex items-center justify-center px-4">
-      <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-3xl">
-        <div className="flex items-start justify-between mb-4">
+    <div className="fixed inset-0 z-50 bg-stone-900/60 backdrop-blur-sm flex items-center justify-center px-4">
+      <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-3xl border border-stone-100 max-h-[90vh] overflow-y-auto">
+        <div className="flex items-start justify-between mb-6">
           <div>
-            <h2 className="text-lg font-semibold">
-              Book <span className="text-blue-600">{venue.name}</span>
+            <h2 className="text-xl font-bold text-stone-900">
+              Book <span className="text-teal-600">{venue.name}</span>
             </h2>
-            <p className="text-xs text-gray-500">
+            <p className="text-sm text-stone-500 mt-1">
               Select your dates and guests to confirm your stay.
             </p>
           </div>
@@ -121,7 +121,7 @@ export default function VenueBookingModal({
         </div>
 
         <div className="grid md:grid-cols-2 gap-8">
-          {/* CALENDAR */}
+          {/* Calendar */}
           <div>
             <DayPicker
               mode="range"
@@ -130,25 +130,27 @@ export default function VenueBookingModal({
               onSelect={handleSelect}
               disabled={bookedRanges}
               modifiersClassNames={{
-                selected: "bg-blue-600 text-white",
-                range_start: "bg-blue-600 text-white rounded-l-full",
-                range_end: "bg-blue-600 text-white rounded-r-full",
-                range_middle: "bg-blue-100 text-blue-700",
+                selected: "bg-teal-600 text-white hover:bg-teal-700",
+                range_start: "bg-teal-600 text-white rounded-l-full",
+                range_end: "bg-teal-600 text-white rounded-r-full",
+                range_middle: "bg-teal-50 text-teal-900",
                 disabled:
-                  "bg-gray-100 text-gray-400 line-through cursor-not-allowed",
+                  "text-stone-300 line-through opacity-50 cursor-not-allowed",
+                today: "text-teal-600 font-bold",
               }}
+              className="border-0"
             />
             {venue.bookings?.length ? (
-              <p className="text-xs text-gray-500 mt-1">
-                Greyed-out dates are unavailable.
+              <p className="text-xs text-stone-400 mt-2 pl-4 italic">
+                * Greyed-out dates are unavailable.
               </p>
             ) : null}
           </div>
 
-          {/* FORM + SUMMARY */}
-          <div className="space-y-4">
+          {/* Form */}
+          <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-semibold text-stone-700 mb-2">
                 Guests
               </label>
               <input
@@ -157,37 +159,44 @@ export default function VenueBookingModal({
                 max={venue.maxGuests}
                 value={guests}
                 onChange={(e) => setGuests(Number(e.target.value) || 1)}
-                className="w-24 border border-gray-300 rounded-lg px-3 py-2"
+                className="w-full border border-stone-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-stone-900 transition-all"
               />
-              <p className="text-xs text-gray-500">
-                Max {venue.maxGuests} guests.
+              <p className="text-xs text-stone-500 mt-2">
+                Max {venue.maxGuests} guests allowed.
               </p>
             </div>
 
-            <div className="text-sm text-gray-700 space-y-1">
-              <p>
-                <span className="font-medium">Check-in:</span> {checkIn || "—"}
-              </p>
-              <p>
-                <span className="font-medium">Check-out:</span>{" "}
-                {checkOut || "—"}
-              </p>
-              <p>
-                <span className="font-medium">Nights:</span> {nights || "—"}
-              </p>
+            <div className="bg-stone-50 rounded-xl p-4 border border-stone-100 space-y-2">
+              <div className="flex justify-between text-sm">
+                <span className="text-stone-500 font-medium">Check-in</span>
+                <span className="text-stone-900 font-bold">
+                  {checkIn || "—"}
+                </span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-stone-500 font-medium">Check-out</span>
+                <span className="text-stone-900 font-bold">
+                  {checkOut || "—"}
+                </span>
+              </div>
+              <div className="flex justify-between text-sm pt-2 border-t border-stone-200 mt-2">
+                <span className="text-stone-500 font-medium">Nights</span>
+                <span className="text-stone-900 font-bold">{nights}</span>
+              </div>
             </div>
 
             {nights > 0 && (
-              <div className="border-t border-gray-200 pt-3 text-sm">
-                <p className="flex justify-between mb-1">
-                  <span>
-                    {venue.price} NOK × {nights} night
-                    {nights > 1 ? "s" : ""}
+              <div className="border-t border-stone-100 pt-4">
+                <div className="flex justify-between items-center mb-1">
+                  <span className="text-sm text-stone-600">
+                    {venue.price} NOK × {nights} night{nights > 1 ? "s" : ""}
                   </span>
-                  <span>{totalPrice} NOK</span>
-                </p>
-                <p className="text-xs text-gray-500">
-                  Taxes and fees may apply.
+                  <span className="text-lg font-bold text-stone-900">
+                    {totalPrice} NOK
+                  </span>
+                </div>
+                <p className="text-xs text-stone-400 text-right">
+                  Includes taxes and fees
                 </p>
               </div>
             )}
@@ -196,7 +205,7 @@ export default function VenueBookingModal({
               <Button
                 type="button"
                 variant="secondary"
-                size="sm"
+                size="md"
                 onClick={onClose}
               >
                 Cancel
@@ -204,12 +213,13 @@ export default function VenueBookingModal({
               <Button
                 type="button"
                 variant="primary"
-                size="sm"
+                size="md"
                 onClick={handleBooking}
                 isLoading={bookingLoading}
                 disabled={!checkIn || !checkOut || nights === 0}
+                className="shadow-lg shadow-teal-900/20"
               >
-                Confirm booking
+                Confirm Booking
               </Button>
             </div>
           </div>

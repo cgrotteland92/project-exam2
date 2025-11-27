@@ -55,12 +55,12 @@ export default function UpdateAvatarModal({
         animate={{ opacity: 1, scale: 1 }}
         className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md border border-gray-100"
       >
-        <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+        <h2 className="text-2xl font-semibold text-stone-900 mb-6">
           Update avatar
         </h2>
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-stone-700 mb-2">
               Image URL
             </label>
             <input
@@ -72,7 +72,7 @@ export default function UpdateAvatarModal({
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-stone-700 mb-2">
               Alt text (optional)
             </label>
             <input

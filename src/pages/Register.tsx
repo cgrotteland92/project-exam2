@@ -68,17 +68,20 @@ export default function Register() {
     }
   }
   return (
-    <section className="flex items-center justify-center min-h-screen bg-gray-50 px-4">
-      <div className="bg-white shadow-md rounded-xl p-8 w-full max-w-md">
-        <h1 className="text-2xl font-bold text-center mb-6 text-blue-600">
+    <section className="flex items-center justify-center min-h-screen bg-stone-50 px-4">
+      <div className="bg-white shadow-xl shadow-stone-200 rounded-2xl p-8 w-full max-w-md border border-stone-100">
+        <h1 className="text-3xl font-bold text-center mb-2 text-stone-900">
           Create an Account
         </h1>
+        <p className="text-center text-stone-500 mb-8">
+          Join Holidaze to book unique stays or host your own.
+        </p>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label
               htmlFor="name"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-medium text-stone-700 mb-1"
             >
               Name
             </label>
@@ -88,7 +91,7 @@ export default function Register() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               autoComplete="name"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-stone-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
               placeholder="Your name"
               required
             />
@@ -97,7 +100,7 @@ export default function Register() {
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-medium text-stone-700 mb-1"
             >
               Email
             </label>
@@ -107,11 +110,11 @@ export default function Register() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               autoComplete="email"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-stone-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
               placeholder="name@stud.noroff.no"
               required
             />
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-stone-500 mt-1">
               Must be a <strong>@stud.noroff.no</strong> email.
             </p>
           </div>
@@ -126,35 +129,39 @@ export default function Register() {
             />
           </div>
 
-          <div className="flex items-center">
+          <div className="flex items-center p-3 bg-stone-50 rounded-xl border border-stone-100">
             <input
               type="checkbox"
               id="venueManager"
               checked={venueManager}
               onChange={(e) => setVenueManager(e.target.checked)}
-              className="mr-2"
+              className="w-5 h-5 text-teal-600 border-stone-300 rounded focus:ring-teal-500"
             />
-            <label htmlFor="venueManager" className="text-sm text-gray-700">
-              Register as a <strong>Venue Manager</strong>
+            <label
+              htmlFor="venueManager"
+              className="ml-3 text-sm text-stone-700 font-medium cursor-pointer select-none"
+            >
+              Register as a{" "}
+              <strong className="text-stone-900">Venue Manager</strong>
             </label>
           </div>
 
           <Button
             type="submit"
             variant="primary"
-            size="md"
-            className="w-full mt-2"
+            size="lg"
+            className="w-full mt-4 shadow-lg shadow-teal-900/20"
             isLoading={loading}
           >
             {loading ? "Creating account..." : "Register"}
           </Button>
         </form>
 
-        <p className="text-center text-sm text-gray-600 mt-4">
+        <p className="text-center text-sm text-stone-600 mt-8">
           Already have an account?{" "}
           <Link
             to="/login"
-            className="text-blue-600 hover:underline font-medium"
+            className="text-teal-600 hover:text-teal-700 hover:underline font-semibold"
           >
             Log in here
           </Link>

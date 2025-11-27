@@ -5,16 +5,17 @@ const API_KEY = import.meta.env.VITE_NOROFF_API_KEY;
 
 /**
  * Fetches a list of venues from the API.
- * @async
- * @returns A list of venues.
+ * UPDATED: Fetches 100 newest venues with owner and booking info.
  */
-
 export async function getVenues(): Promise<Venue[]> {
-  const res = await fetch(`${API_BASE}/holidaze/venues`, {
-    headers: {
-      "X-Noroff-API-Key": API_KEY,
-    },
-  });
+  const res = await fetch(
+    `${API_BASE}/holidaze/venues?sort=created&sortOrder=desc&limit=100&_owner=true&_bookings=true`,
+    {
+      headers: {
+        "X-Noroff-API-Key": API_KEY,
+      },
+    }
+  );
 
   if (!res.ok) {
     const errorBody = await res.json().catch(() => null);
@@ -192,10 +193,13 @@ export async function updateVenue(
 
 /**
  * Search for venues using the API search endpoint.
+ * Includes booking info so filters work on search results.
  */
 export async function searchVenues(query: string): Promise<Venue[]> {
   const res = await fetch(
-    `${API_BASE}/holidaze/venues/search?q=${encodeURIComponent(query)}`,
+    `${API_BASE}/holidaze/venues/search?q=${encodeURIComponent(
+      query
+    )}&_bookings=true&_owner=true`,
     {
       headers: {
         "X-Noroff-API-Key": API_KEY,

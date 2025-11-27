@@ -12,7 +12,7 @@ interface VenueFacilitiesProps {
 export default function VenueFacilities({ meta }: VenueFacilitiesProps) {
   return (
     <section>
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+      <h3 className="text-lg font-semibold text-stone-900 mb-4">
         What this place offers
       </h3>
       <div className="grid grid-cols-2 gap-4">
@@ -21,7 +21,7 @@ export default function VenueFacilities({ meta }: VenueFacilitiesProps) {
           className={`flex items-center gap-3 p-3 rounded-xl border ${
             meta?.wifi
               ? "border-blue-100 bg-blue-50 text-blue-700"
-              : "border-gray-100 bg-gray-50 text-gray-400"
+              : "border-gray-100 bg-gray-50 text-stone-400"
           }`}
         >
           <Icons.Wifi />
@@ -33,7 +33,7 @@ export default function VenueFacilities({ meta }: VenueFacilitiesProps) {
           className={`flex items-center gap-3 p-3 rounded-xl border ${
             meta?.parking
               ? "border-green-100 bg-green-50 text-green-700"
-              : "border-gray-100 bg-gray-50 text-gray-400"
+              : "border-gray-100 bg-gray-50 text-stone-400"
           }`}
         >
           <Icons.Car />
@@ -45,7 +45,7 @@ export default function VenueFacilities({ meta }: VenueFacilitiesProps) {
           className={`flex items-center gap-3 p-3 rounded-xl border ${
             meta?.breakfast
               ? "border-orange-100 bg-orange-50 text-orange-700"
-              : "border-gray-100 bg-gray-50 text-gray-400"
+              : "border-gray-100 bg-gray-50 text-stone-400"
           }`}
         >
           <Icons.Coffee />
@@ -59,7 +59,7 @@ export default function VenueFacilities({ meta }: VenueFacilitiesProps) {
           className={`flex items-center gap-3 p-3 rounded-xl border ${
             meta?.pets
               ? "border-purple-100 bg-purple-50 text-purple-700"
-              : "border-gray-100 bg-gray-50 text-gray-400"
+              : "border-gray-100 bg-gray-50 text-stone-400"
           }`}
         >
           <Icons.PawPrint />

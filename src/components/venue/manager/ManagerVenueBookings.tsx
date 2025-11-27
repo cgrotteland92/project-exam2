@@ -57,7 +57,11 @@ export default function ManagerVenueBookings({
 
   if (!allBookings.length) {
     return (
-      <p className="text-gray-600 text-sm">No bookings for your venues yet.</p>
+      <div className="text-center py-12 bg-stone-50 rounded-xl border border-dashed border-stone-300">
+        <p className="text-stone-600 text-sm">
+          No bookings for your venues yet.
+        </p>
+      </div>
     );
   }
 
@@ -73,44 +77,60 @@ export default function ManagerVenueBookings({
     if (!items.length) return null;
 
     return (
-      <section className="mb-8">
-        <h3 className="text-md font-semibold mb-3">{title}</h3>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <section className="mb-10">
+        <h3 className="text-lg font-bold text-stone-900 mb-4 px-1">{title}</h3>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <AnimatePresence>
             {items.map(({ booking, venue }) => (
               <motion.button
                 key={booking.id}
                 type="button"
                 onClick={() => handleCardClick(venue.id)}
-                className={`text-left bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  highlight ? "ring-1 ring-blue-50" : ""
+                className={`text-left bg-white rounded-xl overflow-hidden border border-stone-200 shadow-sm hover:shadow-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500 hover:-translate-y-1 ${
+                  highlight ? "ring-1 ring-teal-50 bg-teal-50/10" : ""
                 }`}
-                initial={{ opacity: 0, y: 4 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4 }}
+                exit={{ opacity: 0, y: -10 }}
               >
-                <img
-                  src={venue.media?.[0]?.url || "https://placehold.co/600x400"}
-                  alt={venue.media?.[0]?.alt || venue.name}
-                  className="w-full h-40 object-cover rounded-lg mb-3"
-                />
+                <div className="relative h-40 bg-stone-100">
+                  <img
+                    src={
+                      venue.media?.[0]?.url || "https://placehold.co/600x400"
+                    }
+                    alt={venue.media?.[0]?.alt || venue.name}
+                    className="w-full h-full object-cover"
+                  />
+                  {highlight && (
+                    <span className="absolute top-2 right-2 bg-teal-600 text-white text-xs font-bold px-2 py-1 rounded-md shadow-sm">
+                      Upcoming
+                    </span>
+                  )}
+                </div>
 
-                <h4 className="text-base font-semibold mb-1">{venue.name}</h4>
+                <div className="p-4">
+                  <h4 className="text-base font-bold text-stone-900 mb-1 truncate">
+                    {venue.name}
+                  </h4>
 
-                <p className="text-xs text-gray-500 mb-1">
-                  Booked by{" "}
-                  <span className="font-medium">
-                    {booking.customer?.name ?? "Customer"}
-                  </span>
-                </p>
+                  <p className="text-xs text-stone-500 mb-3 flex items-center gap-1">
+                    Booked by{" "}
+                    <span className="font-semibold text-stone-700">
+                      {booking.customer?.name ?? "Customer"}
+                    </span>
+                  </p>
 
-                <p className="text-sm text-gray-600">
-                  {new Date(booking.dateFrom).toLocaleDateString()} →{" "}
-                  {new Date(booking.dateTo).toLocaleDateString()}
-                </p>
-                <p className="text-sm text-gray-500 mb-1">
-                  Guests: {booking.guests}
-                </p>
+                  <div className="bg-stone-50 rounded-lg p-2 mb-2 border border-stone-100">
+                    <p className="text-xs font-semibold text-stone-700">
+                      {new Date(booking.dateFrom).toLocaleDateString()} &rarr;{" "}
+                      {new Date(booking.dateTo).toLocaleDateString()}
+                    </p>
+                  </div>
+
+                  <p className="text-xs text-stone-500 font-medium">
+                    {booking.guests} guest{booking.guests !== 1 ? "s" : ""}
+                  </p>
+                </div>
               </motion.button>
             ))}
           </AnimatePresence>
@@ -122,18 +142,19 @@ export default function ManagerVenueBookings({
   return (
     <div>
       {/* Sort bar */}
-      <div className="flex items-center justify-between mb-4">
-        <p className="text-xs text-gray-500">
-          {allBookings.length} booking
-          {allBookings.length === 1 ? "" : "s"} across your venues
+      <div className="flex items-center justify-between mb-6 bg-stone-50 p-3 rounded-xl border border-stone-100">
+        <p className="text-sm font-medium text-stone-600 pl-2">
+          <span className="font-bold text-stone-900">{allBookings.length}</span>{" "}
+          booking
+          {allBookings.length === 1 ? "" : "s"} total
         </p>
 
-        <div className="flex items-center gap-2 text-xs">
-          <span className="text-gray-500">Sort by</span>
+        <div className="flex items-center gap-2 text-sm">
+          <span className="text-stone-500 hidden sm:inline">Sort by:</span>
           <select
             value={sortOrder}
             onChange={(e) => setSortOrder(e.target.value as SortOrder)}
-            className="border border-gray-300 rounded-lg px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="bg-white border border-stone-200 rounded-lg px-3 py-1.5 text-sm text-stone-700 cursor-pointer focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent font-medium"
           >
             <option value="soonest">Soonest first</option>
             <option value="latest">Latest first</option>
@@ -141,8 +162,8 @@ export default function ManagerVenueBookings({
         </div>
       </div>
 
-      {section("Upcoming bookings for your venues", upcoming, true)}
-      {section("Past bookings for your venues", past, false)}
+      {section("Upcoming bookings", upcoming, true)}
+      {section("Past bookings", past, false)}
     </div>
   );
 }

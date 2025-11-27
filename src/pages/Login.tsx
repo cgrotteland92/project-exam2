@@ -23,7 +23,7 @@ export default function Login() {
   useEffect(() => {
     if (user) {
       if (user.venueManager) {
-        navigate("/Manager");
+        navigate("/manager");
       } else {
         navigate("/");
       }
@@ -51,7 +51,6 @@ export default function Login() {
       if (user && user.accessToken) {
         login(user, user.accessToken);
         toast.success(`Welcome back, ${user.name}!`);
-        navigate("/");
       } else {
         toast.error("Invalid email or password");
       }
@@ -64,17 +63,22 @@ export default function Login() {
   }
 
   return (
-    <section className="flex items-center justify-center min-h-screen bg-gray-50 px-4">
-      <div className="bg-white shadow-md rounded-xl p-8 w-full max-w-md">
-        <h1 className="text-2xl font-bold text-center mb-6 text-blue-600">
-          Login to Holidaze
-        </h1>
+    <section className="flex items-center justify-center min-h-screen bg-stone-50 px-4">
+      <div className="bg-white shadow-xl shadow-stone-200/50 rounded-2xl p-8 w-full max-w-md border border-stone-100">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-stone-900 tracking-tight mb-2">
+            Welcome back
+          </h1>
+          <p className="text-stone-500">
+            Log in to manage your bookings and venues.
+          </p>
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-semibold text-stone-700 mb-1.5"
             >
               Email
             </label>
@@ -83,7 +87,7 @@ export default function Login() {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-stone-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all placeholder-stone-400 text-stone-900"
               placeholder="name@stud.noroff.no"
               autoComplete="email"
               required
@@ -104,19 +108,19 @@ export default function Login() {
           <Button
             type="submit"
             variant="primary"
-            size="md"
-            className="w-full mt-2"
+            size="lg"
+            className="w-full mt-2 shadow-lg shadow-teal-900/10"
             isLoading={loading}
           >
-            Log in
+            {loading ? "Logging in..." : "Log in"}
           </Button>
         </form>
 
-        <p className="text-center text-sm text-gray-600 mt-4">
+        <p className="text-center text-sm text-stone-600 mt-8">
           Don't have an account?{" "}
           <Link
             to="/register"
-            className="text-blue-600 hover:underline font-medium"
+            className="text-teal-600 hover:text-teal-700 hover:underline font-semibold"
           >
             Register here
           </Link>

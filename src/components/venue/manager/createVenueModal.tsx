@@ -100,7 +100,7 @@ export default function CreateVenueModal({
         exit={{ opacity: 0, scale: 0.95, y: -10 }}
         className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-2xl border border-gray-100 max-h-[90vh] overflow-y-auto"
       >
-        <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+        <h2 className="text-2xl font-semibold text-stone-900 mb-6">
           Create new venue
         </h2>
 

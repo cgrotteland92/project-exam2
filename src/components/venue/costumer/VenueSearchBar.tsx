@@ -28,17 +28,18 @@ export default function VenueSearchBar({ onSearch }: VenueSearchBarProps) {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     onSearch({ query, checkIn, checkOut, guests });
+    setOpenCalendar(false);
   }
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white shadow-lg rounded-2xl p-4 mb-10 border border-gray-100 max-w-5xl mx-auto"
+      className="bg-white shadow-xl shadow-stone-200/50 rounded-2xl p-4 mb-10 border border-stone-100 max-w-5xl mx-auto relative z-20"
     >
       <div className="flex flex-col gap-4 md:flex-row md:items-end">
         {/* Destination */}
         <div className="flex-1">
-          <label className="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">
+          <label className="block text-xs font-bold text-stone-500 mb-1 uppercase tracking-wider">
             Destination
           </label>
           <input
@@ -46,13 +47,13 @@ export default function VenueSearchBar({ onSearch }: VenueSearchBarProps) {
             placeholder="Where are you going?"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-full border border-gray-300 rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+            className="w-full border border-stone-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-stone-900 placeholder-stone-400 transition-all"
           />
         </div>
 
         {/* Date Picker Trigger */}
         <div className="relative w-full md:w-64">
-          <label className="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">
+          <label className="block text-xs font-bold text-stone-500 mb-1 uppercase tracking-wider">
             Dates
           </label>
 
@@ -61,18 +62,30 @@ export default function VenueSearchBar({ onSearch }: VenueSearchBarProps) {
             variant="secondary"
             size="md"
             onClick={() => setOpenCalendar(!openCalendar)}
-            className="w-full text-left"
+            className="w-full justify-start font-normal text-stone-600 py-3 border-stone-200 hover:border-stone-300"
           >
-            {checkIn && checkOut ? `${checkIn} → ${checkOut}` : "Select dates"}
+            {checkIn && checkOut ? (
+              <span className="text-stone-900 font-medium">
+                {new Date(checkIn).toLocaleDateString()} &rarr;{" "}
+                {new Date(checkOut).toLocaleDateString()}
+              </span>
+            ) : (
+              "Select dates"
+            )}
           </Button>
 
           {openCalendar && (
-            <div className="absolute z-40 mt-2 bg-white border border-gray-200 shadow-xl rounded-xl p-3">
+            <div className="absolute z-50 mt-3 bg-white border border-stone-100 shadow-2xl rounded-2xl p-4 left-0 md:left-auto md:right-0">
               <DayPicker
                 mode="range"
                 numberOfMonths={2}
                 selected={range}
                 onSelect={setRange}
+                modifiersClassNames={{
+                  selected:
+                    "bg-teal-600 text-white rounded-full hover:bg-teal-700",
+                  today: "text-teal-600 font-bold",
+                }}
               />
             </div>
           )}
@@ -80,7 +93,7 @@ export default function VenueSearchBar({ onSearch }: VenueSearchBarProps) {
 
         {/* Travelers */}
         <div>
-          <label className="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">
+          <label className="block text-xs font-bold text-stone-500 mb-1 uppercase tracking-wider">
             Travelers
           </label>
           <input
@@ -88,17 +101,21 @@ export default function VenueSearchBar({ onSearch }: VenueSearchBarProps) {
             min={1}
             value={guests}
             onChange={(e) => setGuests(Number(e.target.value) || 1)}
-            className="w-24 border border-gray-300 rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+            className="w-full md:w-28 border border-stone-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-stone-900 transition-all"
           />
         </div>
 
-        {/* Search*/}
-        <button
-          type="submit"
-          className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-xl text-sm md:text-base transition shadow-sm"
-        >
-          Search
-        </button>
+        {/* Search Button */}
+        <div className="w-full md:w-auto">
+          <Button
+            type="submit"
+            variant="primary"
+            size="md"
+            className="w-full md:w-auto py-3 px-8 shadow-lg shadow-teal-900/20"
+          >
+            Search
+          </Button>
+        </div>
       </div>
     </form>
   );

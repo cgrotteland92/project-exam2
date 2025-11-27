@@ -86,11 +86,11 @@ export default function VenueBookingSection({
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm p-6">
-      <h2 className="text-lg font-semibold mb-3">Book this venue</h2>
+    <div className="bg-white rounded-2xl shadow-sm p-6 border border-stone-100">
+      <h2 className="text-lg font-bold text-stone-900 mb-4">Book this venue</h2>
 
       <div className="grid md:grid-cols-2 gap-8">
-        {/* CALENDAR */}
+        {/* Calendar */}
         <div>
           <DayPicker
             mode="range"
@@ -100,25 +100,27 @@ export default function VenueBookingSection({
             disabled={[{ before: today }, ...bookedRanges]}
             pagedNavigation
             modifiersClassNames={{
-              selected: "bg-blue-600 text-white",
-              range_start: "bg-blue-600 text-white rounded-l-full",
-              range_end: "bg-blue-600 text-white rounded-r-full",
-              range_middle: "bg-blue-100 text-blue-700",
+              selected: "bg-teal-600 text-white hover:bg-teal-700",
+              range_start: "bg-teal-600 text-white rounded-l-full",
+              range_end: "bg-teal-600 text-white rounded-r-full",
+              range_middle: "bg-teal-50 text-teal-900",
               disabled:
-                "bg-gray-100 text-gray-400 line-through cursor-not-allowed",
+                "text-stone-300 line-through opacity-50 cursor-not-allowed",
+              today: "text-teal-600 font-bold",
             }}
+            className="border-0"
           />
           {bookings.length > 0 && (
-            <p className="text-xs text-gray-500 mt-1">
-              Greyed-out dates are unavailable.
+            <p className="text-xs text-stone-400 mt-2 pl-4 italic">
+              * Greyed-out dates are unavailable.
             </p>
           )}
         </div>
 
-        {/* BOOKING FORM */}
-        <div className="space-y-4">
+        {/* Booking form */}
+        <div className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-semibold text-stone-700 mb-2">
               Guests
             </label>
             <input
@@ -127,28 +129,33 @@ export default function VenueBookingSection({
               max={venue.maxGuests}
               value={guests}
               onChange={(e) => setGuests(Number(e.target.value) || 1)}
-              className="w-24 border border-gray-300 rounded-lg px-3 py-2"
+              className="w-full border border-stone-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-stone-900 transition-all"
             />
-            <p className="text-xs text-gray-500">
-              Max {venue.maxGuests} guests.
+            <p className="text-xs text-stone-500 mt-2">
+              Max {venue.maxGuests} guests allowed.
             </p>
           </div>
 
-          <div className="text-sm text-gray-700">
-            <p>
-              <span className="font-medium">Check-in:</span> {checkIn || "—"}
-            </p>
-            <p>
-              <span className="font-medium">Check-out:</span> {checkOut || "—"}
-            </p>
+          <div className="bg-stone-50 rounded-xl p-4 border border-stone-100 space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-stone-500 font-medium">Check-in</span>
+              <span className="text-stone-900 font-bold">{checkIn || "—"}</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-stone-500 font-medium">Check-out</span>
+              <span className="text-stone-900 font-bold">
+                {checkOut || "—"}
+              </span>
+            </div>
           </div>
 
           <Button
             type="button"
             variant="primary"
-            size="md"
+            size="lg"
             disabled={!checkIn || !checkOut}
             onClick={handleBookNow}
+            className="w-full shadow-lg shadow-teal-900/20"
           >
             Book now
           </Button>

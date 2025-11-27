@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 
 import { useAuth } from "../../../hooks/useAuth";
-import { updateVenue } from "../../../api/venuesApi";
+import { updateVenue, deleteVenue } from "../../../api/venuesApi";
 import type { Venue } from "../../../types/api";
 import VenueForm, { type VenueFormValues } from "../VenueForm";
 
@@ -12,6 +12,7 @@ interface EditVenueModalProps {
   isOpen: boolean;
   onClose: () => void;
   onUpdated: (venue: Venue) => void;
+  onDeleted: (id: string) => void;
 }
 
 export default function EditVenueModal({
@@ -19,6 +20,7 @@ export default function EditVenueModal({
   isOpen,
   onClose,
   onUpdated,
+  onDeleted,
 }: EditVenueModalProps) {
   const { token } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -30,13 +32,9 @@ export default function EditVenueModal({
     description: venue.description ?? "",
     price: String(venue.price),
     maxGuests: String(venue.maxGuests),
-
+    rating: String(venue.rating || 0),
     media:
-      venue.media?.map((img) => ({
-        url: img.url,
-        alt: img.alt || "",
-      })) || [],
-
+      venue.media?.map((img) => ({ url: img.url, alt: img.alt || "" })) || [],
     address: venue.location?.address ?? "",
     city: venue.location?.city ?? "",
     country: venue.location?.country ?? "",
@@ -45,6 +43,29 @@ export default function EditVenueModal({
     breakfast: venue.meta?.breakfast ?? false,
     pets: venue.meta?.pets ?? false,
   };
+
+  async function handleDelete() {
+    if (!token) return;
+
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this venue? This action cannot be undone."
+    );
+
+    if (!confirmed) return;
+
+    try {
+      setIsSubmitting(true);
+      await deleteVenue(venue.id, token);
+
+      toast.success("Venue deleted successfully");
+      onDeleted(venue.id);
+      onClose();
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to delete venue");
+      setIsSubmitting(false);
+    }
+  }
 
   async function handleSubmit(values: VenueFormValues) {
     if (!token) {
@@ -122,7 +143,7 @@ export default function EditVenueModal({
         exit={{ opacity: 0, scale: 0.95, y: -10 }}
         className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-2xl border border-gray-100 max-h-[90vh] overflow-y-auto"
       >
-        <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+        <h2 className="text-2xl font-semibold text-stone-900 mb-6">
           Edit venue
         </h2>
 
@@ -130,6 +151,7 @@ export default function EditVenueModal({
           initialValues={initialValues}
           onSubmit={handleSubmit}
           onCancel={onClose}
+          onDelete={handleDelete}
           submitLabel="Save changes"
           isSubmitting={isSubmitting}
         />

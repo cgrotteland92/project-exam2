@@ -21,22 +21,23 @@ export default function Button({
   ...props
 }: ButtonProps) {
   const base =
-    "inline-flex items-center justify-center rounded-lg font-semibold transition focus:outline-none focus:ring-2 focus:ring-offset-1";
+    "inline-flex items-center justify-center rounded-lg font-semibold transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 cursor-pointerdisabled:cursor-not-allowed";
 
   const variants: Record<Variant, string> = {
     primary:
-      "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-600 disabled:bg-blue-300",
+      "bg-teal-600 text-white hover:bg-teal-700 focus:ring-teal-500 disabled:bg-teal-300 disabled:opacity-70 shadow-sm",
     secondary:
-      "bg-gray-100 text-gray-800 hover:bg-gray-200 focus:ring-gray-400 disabled:bg-gray-100",
-    ghost: "bg-transparent text-gray-700 hover:bg-gray-100 focus:ring-gray-300",
+      "bg-stone-100 text-stone-800 hover:bg-stone-200 focus:ring-stone-400 disabled:bg-stone-50 disabled:text-stone-400 border border-stone-200",
+    ghost:
+      "bg-transparent text-stone-600 hover:bg-stone-100 hover:text-stone-900 focus:ring-stone-300 disabled:text-stone-300",
     danger:
-      "bg-red-600 text-white hover:bg-red-700 focus:ring-red-600 disabled:bg-red-300",
+      "bg-red-50 text-red-600 hover:bg-red-100 focus:ring-red-500 border border-red-100 disabled:bg-red-50 disabled:text-red-300",
   };
 
   const sizes: Record<Size, string> = {
     sm: "text-xs px-3 py-1.5",
     md: "text-sm px-4 py-2",
-    lg: "text-base px-5 py-2.5",
+    lg: "text-base px-6 py-3",
   };
 
   return (
@@ -46,7 +47,7 @@ export default function Button({
       {...props}
     >
       {isLoading && (
-        <span className="mr-2 h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+        <span className="mr-2 h-4 w-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
       )}
       {children}
     </button>
