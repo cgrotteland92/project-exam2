@@ -43,7 +43,7 @@ export default function VenueBookingSection({
 
   async function handleBookNow() {
     if (!user || !token) {
-      toast.error("You need to be logged in to make a booking.");
+      toast.error("Please log in to make a reservation.");
       navigate("/login");
       return;
     }

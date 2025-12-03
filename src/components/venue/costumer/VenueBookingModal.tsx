@@ -3,6 +3,8 @@ import { DayPicker } from "react-day-picker";
 import type { DateRange } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { Check } from "lucide-react";
 
 import type { Venue, Booking } from "../../../types/api";
 import { useAuth } from "../../../hooks/useAuth";
@@ -25,12 +27,18 @@ export default function VenueBookingModal({
   onBookingCreated,
 }: VenueBookingModalProps) {
   const { token, user } = useAuth();
+  const navigate = useNavigate();
 
   const [range, setRange] = useState<DateRange | undefined>();
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [guests, setGuests] = useState(1);
   const [bookingLoading, setBookingLoading] = useState(false);
+
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
   const nights = useMemo(() => {
     if (!checkIn || !checkOut) return 0;
@@ -52,9 +60,18 @@ export default function VenueBookingModal({
     setCheckOut(selected?.to?.toISOString().slice(0, 10) ?? "");
   }
 
+  function handleClose() {
+    setIsSuccess(false);
+    setRange(undefined);
+    setCheckIn("");
+    setCheckOut("");
+    setGuests(1);
+    onClose();
+  }
+
   async function handleBooking() {
     if (!user || !token) {
-      toast.error("You need to be logged in to book.");
+      toast.error("Log in to make a reservation.");
       return;
     }
 
@@ -83,14 +100,7 @@ export default function VenueBookingModal({
       });
 
       onBookingCreated(booking);
-
-      setRange(undefined);
-      setCheckIn("");
-      setCheckOut("");
-      setGuests(1);
-
-      toast.success("Booking confirmed! You can view it in your profile.");
-      onClose();
+      setIsSuccess(true);
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "Failed to create booking";
@@ -102,6 +112,45 @@ export default function VenueBookingModal({
   }
 
   if (!isOpen) return null;
+
+  if (isSuccess) {
+    return (
+      <div className="fixed inset-0 z-50 bg-stone-900/60 backdrop-blur-sm flex items-center justify-center px-4">
+        <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md border border-stone-100 text-center animate-in zoom-in-95 duration-200">
+          <div className="w-20 h-20 bg-teal-50 text-teal-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
+            <Check size={40} strokeWidth={3} />
+          </div>
+
+          <h2 className="text-2xl font-bold text-stone-900 mb-2">
+            Booking Confirmed!
+          </h2>
+          <p className="text-stone-500 mb-8">
+            You are all set for your stay at <br />
+            <span className="font-semibold text-stone-900">{venue.name}</span>.
+          </p>
+
+          <div className="flex flex-col gap-3">
+            <Button
+              variant="primary"
+              size="lg"
+              onClick={() => navigate("/profile")}
+              className="w-full shadow-lg shadow-teal-900/20"
+            >
+              View My Bookings
+            </Button>
+            <Button
+              variant="secondary"
+              size="lg"
+              onClick={handleClose}
+              className="w-full"
+            >
+              Close
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 z-50 bg-stone-900/60 backdrop-blur-sm flex items-center justify-center px-4">
@@ -115,7 +164,7 @@ export default function VenueBookingModal({
               Select your dates and guests to confirm your stay.
             </p>
           </div>
-          <Button type="button" size="sm" variant="ghost" onClick={onClose}>
+          <Button type="button" size="sm" variant="ghost" onClick={handleClose}>
             Close
           </Button>
         </div>
@@ -128,7 +177,7 @@ export default function VenueBookingModal({
               numberOfMonths={2}
               selected={range}
               onSelect={handleSelect}
-              disabled={bookedRanges}
+              disabled={[...bookedRanges, { before: today }]}
               modifiersClassNames={{
                 selected: "bg-teal-600 text-white hover:bg-teal-700",
                 range_start: "bg-teal-600 text-white rounded-l-full",
@@ -206,7 +255,7 @@ export default function VenueBookingModal({
                 type="button"
                 variant="secondary"
                 size="md"
-                onClick={onClose}
+                onClick={handleClose}
               >
                 Cancel
               </Button>

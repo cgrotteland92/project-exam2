@@ -30,7 +30,7 @@ const VenueRow = ({
   };
 
   return (
-    <section className="py-12 bg-white border-b border-stone-100 last:border-0">
+    <section className="py-12 bg-stone-50">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex justify-between items-end mb-8">
           <div>
@@ -166,10 +166,10 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-5xl md:text-7xl font-extrabold text-white tracking-tight leading-tight drop-shadow-xl"
+            className="text-5xl md:text-7xl font-brand font-extrabold text-white tracking-tight leading-tight drop-shadow-xl"
           >
             Wake up somewhere <br />
-            <span className="text-teal-200">extraordinary.</span>
+            <span className="font-brand text-teal-200">extraordinary.</span>
           </motion.h1>
 
           <motion.p
@@ -190,7 +190,7 @@ export default function Home() {
             <Link to="/venues">
               <Button
                 size="lg"
-                className="w-full sm:w-auto px-8 py-4 text-lg bg-teal-600 hover:bg-teal-700 text-white cursor-pointer shadow-2xl shadow-teal-900/50 border-0"
+                className="w-full sm:w-auto px-8 py-4 text-lg bg-teal-600 hover:bg-teal-700 text-white shadow-2xl shadow-teal-900/50 border-0"
               >
                 Browse Venues
               </Button>
@@ -283,7 +283,7 @@ export default function Home() {
       )}
 
       {/* Bottom banner*/}
-      <section className="py-12 px-6">
+      <section className="py-12 px-6 bg-stone-50">
         <div className="max-w-7xl mx-auto bg-stone-900 rounded-3xl overflow-hidden relative flex items-center shadow-2xl">
           <div className="absolute right-0 top-0 w-1/2 h-full hidden md:block">
             <img
@@ -308,7 +308,7 @@ export default function Home() {
               <Link to="/venues">
                 <Button
                   size="lg"
-                  className="px-8 bg-teal-600 hover:bg-teal-700 cursor-pointer text-white border-0"
+                  className="px-8 bg-teal-600 hover:bg-teal-700 text-white border-0"
                 >
                   Explore Venues
                 </Button>
@@ -317,7 +317,7 @@ export default function Home() {
               <Link to="/register">
                 <Button
                   size="lg"
-                  className="px-8 bg-teal-600 hover:bg-teal-700 cursor-pointer text-white border-0"
+                  className="px-8 bg-teal-600 hover:bg-teal-700 text-white border-0"
                 >
                   Create Free Account
                 </Button>

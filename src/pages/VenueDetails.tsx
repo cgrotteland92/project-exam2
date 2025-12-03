@@ -46,7 +46,7 @@ export default function VenueDetails() {
     load();
   }, [id]);
 
-  // Similar Venues
+  // Load Similar Venues
   useEffect(() => {
     async function loadOthers() {
       try {
@@ -132,7 +132,7 @@ export default function VenueDetails() {
                 </span>
                 {typeof rating === "number" && (
                   <span className="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-full border border-stone-200 shadow-sm">
-                    <Icons.Star className="text-amber-500" />
+                    <Icons.Star className="text-teal-600" />
                     <span className="text-stone-900 font-bold">
                       {rating.toFixed(1)}
                     </span>
@@ -140,6 +140,28 @@ export default function VenueDetails() {
                 )}
               </div>
             </div>
+
+            {owner && (
+              <div className="hidden md:flex items-center gap-3 bg-white px-5 py-2.5 rounded-full border border-stone-200 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+                {owner.avatar?.url ? (
+                  <img
+                    src={owner.avatar.url}
+                    alt={owner.name}
+                    className="w-10 h-10 rounded-full object-cover ring-2 ring-stone-100"
+                  />
+                ) : (
+                  <div className="w-10 h-10 bg-stone-100 rounded-full flex items-center justify-center text-stone-400">
+                    <Icons.User />
+                  </div>
+                )}
+                <div className="text-sm">
+                  <p className="text-stone-400 text-xs uppercase tracking-wide font-bold">
+                    Hosted by
+                  </p>
+                  <p className="font-bold text-stone-900">{owner.name}</p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -183,7 +205,7 @@ export default function VenueDetails() {
                   to={`/venues/${v.id}`}
                   className="group block h-full"
                 >
-                  <div className="bg-white rounded-2xl overflow-hidden border border-stone-100 shadow-sm hover:shadow-xl transition-all duration-300 h-full flex flex-col">
+                  <div className="bg-white rounded-2xl overflow-hidden border border-stone-100 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">
                     <div className="relative aspect-4/3 bg-stone-100 overflow-hidden">
                       <img
                         src={
@@ -204,8 +226,7 @@ export default function VenueDetails() {
                         </h3>
                         {v.rating !== undefined && v.rating > 0 && (
                           <span className="flex items-center gap-1 text-xs font-bold bg-stone-100 text-stone-900 px-2 py-1 rounded-full shrink-0">
-                            <Icons.Star className="w-3 h-3 text-amber-500" />{" "}
-                            {v.rating}
+                            <Icons.Star className="text-teal-600" /> {v.rating}
                           </span>
                         )}
                       </div>
