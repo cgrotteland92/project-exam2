@@ -1,0 +1,161 @@
+import { useState } from "react";
+import { motion } from "framer-motion";
+import toast from "react-hot-toast";
+
+import { useAuth } from "../../../hooks/useAuth";
+import { updateVenue, deleteVenue } from "../../../api/venuesApi";
+import type { Venue } from "../../../types/api";
+import VenueForm, { type VenueFormValues } from "../VenueForm";
+
+interface EditVenueModalProps {
+  venue: Venue;
+  isOpen: boolean;
+  onClose: () => void;
+  onUpdated: (venue: Venue) => void;
+  onDeleted: (id: string) => void;
+}
+
+export default function EditVenueModal({
+  venue,
+  isOpen,
+  onClose,
+  onUpdated,
+  onDeleted,
+}: EditVenueModalProps) {
+  const { token } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  if (!isOpen) return null;
+
+  const initialValues: Partial<VenueFormValues> = {
+    name: venue.name,
+    description: venue.description ?? "",
+    price: String(venue.price),
+    maxGuests: String(venue.maxGuests),
+    rating: String(venue.rating || 0),
+    media:
+      venue.media?.map((img) => ({ url: img.url, alt: img.alt || "" })) || [],
+    address: venue.location?.address ?? "",
+    city: venue.location?.city ?? "",
+    country: venue.location?.country ?? "",
+    wifi: venue.meta?.wifi ?? false,
+    parking: venue.meta?.parking ?? false,
+    breakfast: venue.meta?.breakfast ?? false,
+    pets: venue.meta?.pets ?? false,
+  };
+
+  async function handleDelete() {
+    if (!token) return;
+
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this venue? This action cannot be undone."
+    );
+
+    if (!confirmed) return;
+
+    try {
+      setIsSubmitting(true);
+      await deleteVenue(venue.id, token);
+
+      toast.success("Venue deleted successfully");
+      onDeleted(venue.id);
+      onClose();
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to delete venue");
+      setIsSubmitting(false);
+    }
+  }
+
+  async function handleSubmit(values: VenueFormValues) {
+    if (!token) {
+      toast.error("You must be logged in as a venue manager.");
+      return;
+    }
+
+    const priceNumber = Number(values.price);
+    const guestsNumber = Number(values.maxGuests);
+    const ratingNumber = Number(values.rating);
+
+    if (!priceNumber || priceNumber <= 0) {
+      toast.error("Please enter a valid price.");
+      return;
+    }
+
+    if (!guestsNumber || guestsNumber < 1) {
+      toast.error("Max guests must be at least 1.");
+      return;
+    }
+
+    if (ratingNumber < 0 || ratingNumber > 5) {
+      toast.error("Rating must be between 0 and 5.");
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+
+      const updated = await updateVenue(
+        venue.id,
+        {
+          name: values.name.trim(),
+          description: values.description.trim() || undefined,
+          price: priceNumber,
+          maxGuests: guestsNumber,
+          rating: ratingNumber,
+          media: values.media.length > 0 ? values.media : undefined,
+          location:
+            values.address || values.city || values.country
+              ? {
+                  address: values.address.trim() || undefined,
+                  city: values.city.trim() || undefined,
+                  country: values.country.trim() || undefined,
+                }
+              : undefined,
+          meta: {
+            wifi: values.wifi,
+            parking: values.parking,
+            breakfast: values.breakfast,
+            pets: values.pets,
+          },
+        },
+        token
+      );
+
+      toast.success("Venue updated!");
+      onUpdated(updated);
+      onClose();
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Failed to update venue";
+      toast.error(message);
+      console.error(err);
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/20 backdrop-blur-md flex items-center justify-center px-4">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 10 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: -10 }}
+        className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-2xl border border-gray-100 max-h-[90vh] overflow-y-auto"
+      >
+        <h2 className="text-2xl font-semibold text-stone-900 mb-6">
+          Edit venue
+        </h2>
+
+        <VenueForm
+          initialValues={initialValues}
+          onSubmit={handleSubmit}
+          onCancel={onClose}
+          onDelete={handleDelete}
+          submitLabel="Save changes"
+          isSubmitting={isSubmitting}
+        />
+      </motion.div>
+    </div>
+  );
+}

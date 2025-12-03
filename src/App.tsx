@@ -1,9 +1,13 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
+import Venues from "./pages/AllVenues";
+import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
+import Manager from "./pages/Manager";
+import Navbar from "./components/ui/Navbar";
+import Footer from "./components/ui/Footer";
+import VenueDetails from "./pages/VenueDetails";
 
 export default function App() {
   return (
@@ -12,8 +16,12 @@ export default function App() {
       <main className="grow">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/venues" element={<Venues />} />
+          <Route path="/venues/:id" element={<VenueDetails />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/manager" element={<Manager />} />
         </Routes>
       </main>
       <Footer />

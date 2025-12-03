@@ -1,3 +1,7 @@
+export interface Media {
+  url: string;
+  alt?: string;
+}
 export interface Avatar {
   url: string;
   alt?: string;
@@ -14,13 +18,6 @@ export interface LoginResponse extends AuthUser {
   accessToken: string;
 }
 
-export interface ProfileResponse extends AuthUser {
-  _count?: {
-    venues: number;
-    bookings: number;
-  };
-}
-
 export interface Venue {
   id: string;
   name: string;
@@ -28,7 +25,53 @@ export interface Venue {
   media?: { url: string; alt?: string }[];
   price: number;
   maxGuests: number;
-  location?: { address?: string; city?: string; country?: string };
-  owner?: { name: string; email: string };
-  avatar?: { url: string; alt?: string };
+
+  rating?: number;
+  created?: string;
+  updated?: string;
+
+  meta?: {
+    wifi?: boolean;
+    parking?: boolean;
+    breakfast?: boolean;
+    pets?: boolean;
+  };
+
+  location?: {
+    address?: string;
+    city?: string;
+    zip?: string;
+    country?: string;
+    continent?: string;
+  };
+
+  owner?: {
+    name: string;
+    email: string;
+    avatar?: Avatar;
+    banner?: Avatar;
+    bio?: string;
+  };
+
+  bookings?: Booking[];
+}
+
+export interface Booking {
+  id: string;
+  dateFrom: string;
+  dateTo: string;
+  guests: number;
+  venue?: Venue;
+  customer?: AuthUser;
+  created?: string;
+  updated?: string;
+}
+
+export interface ProfileResponse extends AuthUser {
+  _count?: {
+    venues: number;
+    bookings: number;
+  };
+  venues?: Venue[];
+  bookings?: Booking[];
 }

@@ -1,6 +1,5 @@
-import toast from "react-hot-toast";
 import type { AuthUser, LoginResponse, ProfileResponse } from "../types/api";
-
+const API_KEY = import.meta.env.VITE_NOROFF_API_KEY;
 const API_BASE = "https://v2.api.noroff.dev";
 
 /**
@@ -18,24 +17,22 @@ export async function registerUser(
   password: string,
   venueManager = false
 ): Promise<AuthUser> {
-  try {
-    const response = await fetch(`${API_BASE}/auth/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password, venueManager }),
-    });
+  const response = await fetch(`${API_BASE}/auth/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, email, password, venueManager }),
+  });
 
-    if (!response.ok) throw new Error("Registration failed");
-
-    const data: AuthUser = await response.json();
-    toast.success("Registration successful");
-    return data;
-  } catch (error: unknown) {
-    const message =
-      error instanceof Error ? error.message : "Registration failed";
-    toast.error(message);
-    throw error;
+  if (!response.ok) {
+    const errorBody = await response.json();
+    throw new Error(
+      errorBody.errors?.[0]?.message ||
+        errorBody.message ||
+        "Registration failed"
+    );
   }
+
+  return await response.json();
 }
 
 /**
@@ -46,56 +43,60 @@ export async function loginUser(
   email: string,
   password: string
 ): Promise<LoginResponse> {
-  try {
-    const res = await fetch(`${API_BASE}/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+  const res = await fetch(`${API_BASE}/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
 
-    if (!res.ok) {
-      throw new Error("Invalid email or password");
-    }
-
-    const json = await res.json();
-    const data: LoginResponse = json.data;
-
-    toast.success(`Welcome back, ${data.name}!`);
-    return data;
-  } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : "Login failed";
-    toast.error(message);
-    throw error;
+  if (!res.ok) {
+    const errorBody = await res.json().catch(() => null);
+    throw new Error(
+      errorBody?.errors?.[0]?.message || errorBody?.message || "Login failed"
+    );
   }
-}
 
+  const json = await res.json();
+  return json.data as LoginResponse;
+}
 /**
- * Fetch a user profile by name.
+ * Fetch a user profile by name, with optional related data.
+ * @param name - The username (from user.name)
+ * @param token - The auth token (from login)
+ * @param options - Include venues/bookings/count data if needed
  * @returns {Promise<ProfileResponse>} - The user's profile data
  */
 export async function getProfile(
   name: string,
-  token: string
+  token: string,
+  options?: { venues?: boolean; bookings?: boolean; count?: boolean }
 ): Promise<ProfileResponse> {
-  try {
-    const res = await fetch(`${API_BASE}/holidaze/profiles/${name}`, {
+  const params = new URLSearchParams();
+  if (options?.venues) params.set("_venues", "true");
+  if (options?.bookings) params.set("_bookings", "true");
+  if (options?.count) params.set("_count", "true");
+
+  const res = await fetch(
+    `${API_BASE}/holidaze/profiles/${name}?${params.toString()}`,
+    {
       headers: {
         Authorization: `Bearer ${token}`,
+        "X-Noroff-API-Key": API_KEY,
       },
-    });
-
-    if (!res.ok) throw new Error("Failed to load profile");
-
-    const data: ProfileResponse = await res.json();
-    return data;
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      toast.error(error.message);
-    } else {
-      toast.error("Unable to fetch profile");
     }
-    throw error;
+  );
+
+  if (!res.ok) {
+    const errorBody = await res.json().catch(() => null);
+    throw new Error(
+      errorBody?.errors?.[0]?.message ||
+        errorBody?.message ||
+        "Failed to load profile"
+    );
   }
+
+  const json = await res.json();
+  return json.data as ProfileResponse;
 }
 
 /**
@@ -107,28 +108,31 @@ export async function updateAvatar(
   token: string,
   avatarUrl: string,
   alt: string
-): Promise<AuthUser> {
-  try {
-    const res = await fetch(`${API_BASE}/holidaze/profiles/${name}/media`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+): Promise<ProfileResponse> {
+  const res = await fetch(`${API_BASE}/holidaze/profiles/${name}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+      "X-Noroff-API-Key": API_KEY,
+    },
+    body: JSON.stringify({
+      avatar: {
+        url: avatarUrl,
+        alt,
       },
-      body: JSON.stringify({ avatar: { url: avatarUrl, alt } }),
-    });
+    }),
+  });
 
-    if (!res.ok) throw new Error("Failed to update avatar");
-
-    const data: AuthUser = await res.json();
-    toast.success("Avatar updated successfully!");
-    return data;
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      toast.error(error.message);
-    } else {
-      toast.error("Avatar update failed");
-    }
-    throw error;
+  if (!res.ok) {
+    const errorBody = await res.json().catch(() => null);
+    throw new Error(
+      errorBody?.errors?.[0]?.message ||
+        errorBody?.message ||
+        "Failed to update avatar"
+    );
   }
+
+  const json = await res.json();
+  return json.data as ProfileResponse;
 }
