@@ -1,4 +1,4 @@
-#Holidaze - Accommodation Booking Application
+# Holidaze - Accommodation Booking Application
 
 Holidaze is a modern front-end accommodation booking application built for the final exam project at Noroff. It allows users to browse and book unique venues, while providing venue managers with tools to list and manage their properties.
 
