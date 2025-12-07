@@ -5,7 +5,7 @@ const API_KEY = import.meta.env.VITE_NOROFF_API_KEY;
 
 /**
  * Fetches a list of venues from the API.
- * UPDATED: Fetches 100 newest venues with owner and booking info.
+ * Fetches 100 newest venues with owner and booking info.
  */
 export async function getVenues(): Promise<Venue[]> {
   const res = await fetch(

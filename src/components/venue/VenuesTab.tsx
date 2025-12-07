@@ -88,7 +88,7 @@ export default function VenuesTab({
         ))}
       </div>
 
-      {/* Edit Modal (Contains Delete Button) */}
+      {/* Edit Modal */}
       {editingVenue && (
         <EditVenueModal
           venue={editingVenue}
