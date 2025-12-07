@@ -66,7 +66,7 @@ export default function Login() {
     <section className="flex items-center justify-center min-h-screen bg-stone-50 px-4">
       <div className="bg-white shadow-xl shadow-stone-200/50 rounded-2xl p-8 w-full max-w-md border border-stone-100">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-stone-900 tracking-tight mb-2">
+          <h1 className="text-3xl font-brand font-bold text-stone-900 tracking-tight mb-2">
             Welcome back
           </h1>
           <p className="text-stone-500">

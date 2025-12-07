@@ -54,7 +54,6 @@ const VenueRow = ({
             <Icons.ChevronLeft />
           </button>
 
-          {/* Horizontal Scroll Container */}
           <div
             ref={scrollRef}
             className="flex gap-6 overflow-x-auto pb-6 snap-x snap-mandatory -mx-6 px-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']"
@@ -63,23 +62,23 @@ const VenueRow = ({
               <Link
                 key={venue.id}
                 to={`/venues/${venue.id}`}
-                className="min-w-[280px] md:min-w-[320px] snap-center group/card block"
+                className="min-w-[280px] md:min-w-[320px] snap-center group/card block bg-white rounded-2xl p-3 border border-stone-100 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1"
               >
-                <div className="relative aspect-4/3 rounded-2xl overflow-hidden mb-4 border border-stone-100 shadow-sm">
+                <div className="relative aspect-4/3 rounded-xl overflow-hidden mb-3 bg-stone-100">
                   <img
                     src={venue.media?.[0]?.url || "https://placehold.co/400"}
                     alt={venue.name}
-                    className="w-full h-full object-cover group-hover/card:scale-110 transition duration-700"
+                    className="w-full h-full object-cover group-hover/card:scale-105 transition duration-700"
                     loading="lazy"
                   />
                   <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm text-stone-800">
                     <Icons.Star className="text-teal-600" /> {venue.rating}
                   </div>
                 </div>
-                <h3 className="font-bold text-stone-900 truncate group-hover/card:text-teal-700 transition-colors">
+                <h3 className="font-bold text-stone-900 truncate group-hover/card:text-teal-700 transition-colors px-1">
                   {venue.name}
                 </h3>
-                <p className="text-stone-500 text-sm mt-1 flex items-center justify-between">
+                <p className="text-stone-500 text-sm mt-1 flex items-center justify-between px-1">
                   <span>{venue.location?.city || "Unknown City"}</span>
                   <span>
                     <span className="font-semibold text-stone-900">
@@ -117,27 +116,27 @@ export default function Home() {
       try {
         const data = await getVenues();
 
-        // Top Rated
+        // 1. Top Rated
         const best = data
           .filter(
             (v) => v.rating && v.rating >= 4 && v.media && v.media.length > 0
           )
           .sort(() => 0.5 - Math.random())
-          .slice(0, 8);
+          .slice(0, 10);
         setTopRated(best);
 
-        // Budget Friendly
+        // 2. Budget Friendly
         const budget = data
           .filter((v) => v.price < 1000 && v.media && v.media.length > 0)
           .sort(() => 0.5 - Math.random())
-          .slice(0, 8);
+          .slice(0, 10);
         setBudgetFriendly(budget);
 
-        // Large Groups
+        // 3. Large Groups
         const large = data
           .filter((v) => v.maxGuests >= 6 && v.media && v.media.length > 0)
           .sort(() => 0.5 - Math.random())
-          .slice(0, 8);
+          .slice(0, 10);
         setLargeGroups(large);
       } catch (error) {
         console.error(error);
@@ -149,9 +148,8 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* 1. Hero */}
-      <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
+    <div className="min-h-screen bg-stone-50">
+      <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img
             src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=2070&auto=format&fit=crop"
@@ -161,22 +159,23 @@ export default function Home() {
           <div className="absolute inset-0 bg-stone-900/40" />
         </div>
 
-        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto space-y-8">
+        {/* Hero */}
+        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto space-y-6 sm:space-y-8">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-5xl md:text-7xl font-brand font-extrabold text-white tracking-tight leading-tight drop-shadow-xl"
+            className="text-4xl sm:text-5xl md:text-7xl font-extrabold text-white tracking-tight leading-tight drop-shadow-xl wrap-break-words"
           >
-            Wake up somewhere <br />
-            <span className="font-brand text-teal-200">extraordinary.</span>
+            Wake up somewhere <br />{" "}
+            <span className="text-teal-200">extraordinary.</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-xl md:text-2xl text-stone-100 max-w-2xl mx-auto font-light"
+            className="text-lg sm:text-xl md:text-2xl text-stone-100 max-w-2xl mx-auto font-light px-2"
           >
             Discover unique homes, cabins, and getaways around the world.
           </motion.p>
@@ -185,23 +184,22 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center pt-4"
+            className="flex flex-col sm:flex-row gap-4 justify-center pt-4 px-4"
           >
-            <Link to="/venues">
+            <Link to="/venues" className="w-full sm:w-auto">
               <Button
                 size="lg"
-                className="w-full sm:w-auto px-8 py-4 text-lg bg-teal-600 hover:bg-teal-700 text-white shadow-2xl shadow-teal-900/50 border-0"
+                className="w-full px-8 py-4 text-lg bg-teal-600 hover:bg-teal-700 text-white shadow-2xl shadow-teal-900/50 border-0"
               >
                 Browse Venues
               </Button>
             </Link>
-
             {!user && (
-              <Link to="/register">
+              <Link to="/register" className="w-full sm:w-auto">
                 <Button
                   size="lg"
                   variant="secondary"
-                  className="w-full sm:w-auto px-8 py-4 text-lg bg-white/10 text-white border-white/30 hover:bg-white/20 backdrop-blur-md"
+                  className="w-full px-8 py-4 text-lg bg-white/10 text-white border-white/30 hover:bg-white/20 backdrop-blur-md"
                 >
                   Become a Host
                 </Button>
@@ -211,7 +209,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-20 bg-stone-50">
+      <section className="py-20 bg-white relative z-10">
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-12 text-center">
           <div className="space-y-4">
             <div className="w-16 h-16 bg-teal-100 text-teal-700 rounded-2xl flex items-center justify-center mx-auto text-3xl shadow-sm">
@@ -226,7 +224,7 @@ export default function Home() {
             </p>
           </div>
           <div className="space-y-4">
-            <div className="w-16 h-16 bg-amber-100 text-stone-700 rounded-2xl flex items-center justify-center mx-auto text-3xl shadow-sm">
+            <div className="w-16 h-16 bg-amber-100 text-amber-700 rounded-2xl flex items-center justify-center mx-auto text-3xl shadow-sm">
               <Icons.Star />
             </div>
             <h3 className="text-xl font-bold text-stone-800">
@@ -252,13 +250,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Venues */}
+      {/* Venue rows */}
       {loading ? (
         <div className="py-24 max-w-7xl mx-auto px-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[...Array(4)].map((_, i) => (
             <div
               key={i}
-              className="bg-stone-100 h-64 rounded-2xl animate-pulse"
+              className="bg-stone-200 h-64 rounded-2xl animate-pulse"
             />
           ))}
         </div>
@@ -282,8 +280,8 @@ export default function Home() {
         </>
       )}
 
-      {/* Bottom banner*/}
-      <section className="py-12 px-6 bg-stone-50">
+      {/* Banner */}
+      <section className="py-12 px-6">
         <div className="max-w-7xl mx-auto bg-stone-900 rounded-3xl overflow-hidden relative flex items-center shadow-2xl">
           <div className="absolute right-0 top-0 w-1/2 h-full hidden md:block">
             <img
@@ -308,7 +306,7 @@ export default function Home() {
               <Link to="/venues">
                 <Button
                   size="lg"
-                  className="px-8 bg-teal-600 hover:bg-teal-700 text-white border-0"
+                  className="px-8 bg-teal-600 hover:bg-teal-700 cursor-pointer text-white border-0"
                 >
                   Explore Venues
                 </Button>
@@ -317,7 +315,7 @@ export default function Home() {
               <Link to="/register">
                 <Button
                   size="lg"
-                  className="px-8 bg-teal-600 hover:bg-teal-700 text-white border-0"
+                  className="px-8 bg-teal-600 hover:bg-teal-700 cursor-pointer text-white border-0"
                 >
                   Create Free Account
                 </Button>

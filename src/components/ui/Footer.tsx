@@ -16,7 +16,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-stone-50 border-t border-stone-200 mt-auto">
+    <footer className="bg-[#44403C] mt-auto">
       <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           {/* Brand */}
@@ -27,7 +27,7 @@ export default function Footer() {
             >
               <img src="/logo.png" alt="Holidaze" className="h-18 w-auto" />
             </Link>
-            <p className="text-stone-500 text-sm mt-4 leading-relaxed max-w-xs">
+            <p className="text-stone-300 text-sm mt-4 leading-relaxed max-w-xs">
               Discover unique homes and unforgettable experiences around the
               world.
             </p>
@@ -35,25 +35,25 @@ export default function Footer() {
 
           {/* Links 1 */}
           <div>
-            <h3 className="font-bold text-stone-900 mb-4">Explore</h3>
-            <ul className="space-y-3 text-sm text-stone-600">
+            <h3 className="font-bold text-white mb-4">Explore</h3>
+            <ul className="space-y-3 text-sm text-stone-300">
               <li>
                 <Link
                   to="/venues"
-                  className="hover:text-teal-600 transition-colors"
+                  className="hover:text-teal-400 transition-colors"
                 >
                   All Venues
                 </Link>
               </li>
               <li>
-                <Link to="/" className="hover:text-teal-600 transition-colors">
+                <Link to="/" className="hover:text-teal-400 transition-colors">
                   Featured Stays
                 </Link>
               </li>
               <li>
                 <Link
                   to="/register"
-                  className="hover:text-teal-600 transition-colors"
+                  className="hover:text-teal-400 transition-colors"
                 >
                   Become a Host
                 </Link>
@@ -63,13 +63,13 @@ export default function Footer() {
 
           {/* Links 2 */}
           <div>
-            <h3 className="font-bold text-stone-900 mb-4">Support</h3>
-            <ul className="space-y-3 text-sm text-stone-600">
+            <h3 className="font-bold text-white mb-4">Support</h3>
+            <ul className="space-y-3 text-sm text-stone-300">
               <li>
                 <a
                   href="#"
                   onClick={handlePlaceholder}
-                  className="hover:text-teal-600 transition-colors"
+                  className="hover:text-teal-400 transition-colors"
                 >
                   Help Center
                 </a>
@@ -78,7 +78,7 @@ export default function Footer() {
                 <a
                   href="#"
                   onClick={handlePlaceholder}
-                  className="hover:text-teal-600 transition-colors"
+                  className="hover:text-teal-400 transition-colors"
                 >
                   Safety information
                 </a>
@@ -87,7 +87,7 @@ export default function Footer() {
                 <a
                   href="#"
                   onClick={handlePlaceholder}
-                  className="hover:text-teal-600 transition-colors"
+                  className="hover:text-teal-400 transition-colors"
                 >
                   Cancellation options
                 </a>
@@ -97,13 +97,13 @@ export default function Footer() {
 
           {/* Links 3 */}
           <div>
-            <h3 className="font-bold text-stone-900 mb-4">Company</h3>
-            <ul className="space-y-3 text-sm text-stone-600">
+            <h3 className="font-bold text-white mb-4">Company</h3>
+            <ul className="space-y-3 text-sm text-stone-300">
               <li>
                 <a
                   href="#"
                   onClick={handlePlaceholder}
-                  className="hover:text-teal-600 transition-colors"
+                  className="hover:text-teal-400 transition-colors"
                 >
                   About us
                 </a>
@@ -112,7 +112,7 @@ export default function Footer() {
                 <a
                   href="#"
                   onClick={handlePlaceholder}
-                  className="hover:text-teal-600 transition-colors"
+                  className="hover:text-teal-400 transition-colors"
                 >
                   Terms of Service
                 </a>
@@ -121,7 +121,7 @@ export default function Footer() {
                 <a
                   href="#"
                   onClick={handlePlaceholder}
-                  className="hover:text-teal-600 transition-colors"
+                  className="hover:text-teal-400 transition-colors"
                 >
                   Privacy Policy
                 </a>
@@ -131,7 +131,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-stone-200 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="pt-8 border-t border-stone-600 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-stone-400 text-sm">
             © {new Date().getFullYear()} Holidaze. All rights reserved.
           </p>
@@ -141,7 +141,7 @@ export default function Footer() {
             <a
               href="#"
               onClick={handlePlaceholder}
-              className="hover:text-teal-600 transition-colors"
+              className="hover:text-teal-400 transition-colors"
               aria-label="Instagram"
             >
               <Instagram size={20} />
@@ -149,7 +149,7 @@ export default function Footer() {
             <a
               href="#"
               onClick={handlePlaceholder}
-              className="hover:text-teal-600 transition-colors"
+              className="hover:text-teal-400 transition-colors"
               aria-label="Twitter"
             >
               <Twitter size={20} />
@@ -157,7 +157,7 @@ export default function Footer() {
             <a
               href="#"
               onClick={handlePlaceholder}
-              className="hover:text-teal-600 transition-colors"
+              className="hover:text-teal-400 transition-colors"
               aria-label="Facebook"
             >
               <Facebook size={20} />

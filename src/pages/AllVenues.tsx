@@ -103,11 +103,11 @@ export default function AllVenues() {
 
   return (
     <section className="min-h-screen bg-stone-50 pb-20">
-      {/* Header Section (Now Light) */}
+      {/* Header*/}
       <div className="pt-16 pb-8 px-4">
         <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-3xl md:text-4xl font-bold text-stone-900 mb-8 tracking-tight">
-            Find your perfect place
+          <h1 className="text-3xl md:text-4xl font-brand font-bold text-stone-900 mb-8 tracking-tight">
+            Explore All Available Venues
           </h1>
           <div className="max-w-3xl mx-auto">
             <VenueSearchBar onSearch={handleSearch} />
@@ -116,7 +116,7 @@ export default function AllVenues() {
       </div>
 
       <div className="max-w-7xl mx-auto px-6 pt-4">
-        {/* Filter Bar */}
+        {/* Filter */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <h2 className="text-2xl font-bold text-stone-900">
             {selectedRegion === "All"
@@ -170,7 +170,7 @@ export default function AllVenues() {
                 >
                   <Link
                     to={`/venues/${venue.id}`}
-                    className="group bg-white shadow-sm hover:shadow-xl rounded-2xl overflow-hidden border border-stone-100 flex flex-col h-full transition-all duration-300 hover:-translate-y-1"
+                    className="group bg-white shadow-sm hover:shadow-xl rounded-2xl overflow-hidden border border-stone-100 flex flex-col h-full transition-all duration-300"
                   >
                     {/* Image Container */}
                     <div className="relative overflow-hidden h-64 bg-stone-100">

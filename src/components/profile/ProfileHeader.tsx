@@ -23,12 +23,13 @@ export default function ProfileHeader({
             src={profile.avatar?.url || "https://placehold.co/200x200"}
             alt={profile.avatar?.alt || profile.name}
             className="w-32 h-32 rounded-2xl object-cover border-2 border-gray-100 shadow-sm group-hover:shadow-md transition-shadow duration-300"
+            loading="lazy"
           />
         </div>
 
         {/* Profile Info */}
         <div className="flex-1 text-center sm:text-left">
-          <h1 className="text-3xl font-bold text-stone-900 mb-1">
+          <h1 className="text-3xl font-brand font-bold text-stone-900 mb-1">
             {profile.name}
           </h1>
           <p className="text-stone-500 mb-4">{profile.email}</p>

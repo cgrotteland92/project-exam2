@@ -122,7 +122,7 @@ export default function VenueDetails() {
         <div className="mb-12 pb-8 border-b border-stone-200">
           <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
             <div>
-              <h1 className="text-3xl md:text-5xl font-bold text-stone-900 mb-4 tracking-tight">
+              <h1 className="text-3xl md:text-5xl font-brand font-bold text-stone-900 mb-4 tracking-tight">
                 {name}
               </h1>
               <div className="flex flex-wrap items-center gap-4 text-sm font-medium text-stone-500">
@@ -140,28 +140,6 @@ export default function VenueDetails() {
                 )}
               </div>
             </div>
-
-            {owner && (
-              <div className="hidden md:flex items-center gap-3 bg-white px-5 py-2.5 rounded-full border border-stone-200 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
-                {owner.avatar?.url ? (
-                  <img
-                    src={owner.avatar.url}
-                    alt={owner.name}
-                    className="w-10 h-10 rounded-full object-cover ring-2 ring-stone-100"
-                  />
-                ) : (
-                  <div className="w-10 h-10 bg-stone-100 rounded-full flex items-center justify-center text-stone-400">
-                    <Icons.User />
-                  </div>
-                )}
-                <div className="text-sm">
-                  <p className="text-stone-400 text-xs uppercase tracking-wide font-bold">
-                    Hosted by
-                  </p>
-                  <p className="font-bold text-stone-900">{owner.name}</p>
-                </div>
-              </div>
-            )}
           </div>
         </div>
 
