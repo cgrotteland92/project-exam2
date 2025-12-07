@@ -6,7 +6,7 @@ import { getManagerVenuesWithBookings } from "../api/venuesApi";
 import type { Venue } from "../types/api";
 
 import ManagerVenueBookings from "../components/venue/manager/ManagerVenueBookings";
-import CreateVenueModal from "../components/venue/manager/CreateVenueModal";
+import CreateVenueModal from "../components/venue/manager/Temp";
 import VenuesTab from "../components/venue/VenuesTab";
 import Button from "../components/ui/Button";
 
